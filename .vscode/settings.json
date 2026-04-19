@@ -1,0 +1,9 @@
+{
+  "yaml.schemas": {
+    "data/workbook_schema.json": ["data/**/*.yaml", "data/**/*.yml"]
+  },
+  "[yaml]": {
+    "editor.defaultFormatter": "redhat.vscode-yaml",
+    "editor.formatOnSave": true
+  }
+}
