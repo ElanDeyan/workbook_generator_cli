@@ -20,7 +20,7 @@ ArgParser buildParser() {
 }
 
 void printUsage(ArgParser argParser) {
-  print('Usage: dart workbook_generator.dart <flags> [arguments]');
+  print('Usage: dart workbook_generator_cli.dart <flags> [arguments]');
   print(argParser.usage);
 }
 
@@ -36,7 +36,7 @@ void main(List<String> arguments) {
       return;
     }
     if (results.flag('version')) {
-      print('workbook_generator version: $version');
+      print('workbook_generator_cli version: $version');
       return;
     }
     if (results.flag('verbose')) {
