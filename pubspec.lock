@@ -110,7 +110,7 @@ packages:
     description:
       path: "."
       ref: HEAD
-      resolved-ref: bf7ef39a8fee2db88f4258030cac52d0b483a9e9
+      resolved-ref: "979b5f0ff4b1b09b2488af68a03fe490f164b111"
       url: "https://github.com/ElanDeyan/dev_utils"
     source: git
     version: "1.0.0-dev.0"
@@ -426,6 +426,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.3.0"
+  very_good_analysis:
+    dependency: transitive
+    description:
+      name: very_good_analysis
+      sha256: d1cb1d66a5aae2c702d68caca6c8347306d35e728fd94555fa21fa0448a972e0
+      url: "https://pub.dev"
+    source: hosted
+    version: "10.2.0"
   vm_service:
     dependency: transitive
     description:
@@ -491,4 +499,4 @@ packages:
     source: hosted
     version: "3.1.3"
 sdks:
-  dart: ">=3.11.5 <4.0.0"
+  dart: ">=3.12.0 <4.0.0"
