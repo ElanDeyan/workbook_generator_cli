@@ -1,20 +1,12 @@
 {
   "$schema": "http://json-schema.org/draft-04/schema#",
   "definitions": {
-    "kind": {
-      "enum": [
-        "normal",
-        "visit",
-        "specialEvent"
-      ],
-      "type": "object"
-    },
     "multiPersonSegment": {
       "additionalProperties": false,
       "description": "A segment with title, duration, and multiple participants",
       "properties": {
         "duration": {
-          "pattern": "^\\d+\\s*min$",
+          "pattern": "^\\d+:\\d+$",
           "type": "string"
         },
         "title": {
@@ -64,7 +56,7 @@
                   "type": "string"
                 },
                 "duration": {
-                  "pattern": "^\\d+\\s*min$",
+                  "pattern": "^\\d+:\\d+$",
                   "type": "string"
                 },
                 "reader": {
@@ -99,31 +91,21 @@
           "type": "object"
         },
         "final_comments": {
+          "$ref": "#/definitions/segment",
           "additionalProperties": false,
-          "description": "Final comments section",
-          "properties": {
-            "duration": {
-              "pattern": "^\\d+\\s*min$",
-              "type": "string"
-            },
-            "who": {
-              "minLength": 1,
-              "type": "string"
-            }
-          },
-          "required": [
-            "who",
-            "duration"
-          ],
-          "type": "object"
+          "description": "Final comments section"
         },
         "initial_comments": {
           "additionalProperties": false,
           "description": "Initial comments section",
           "properties": {
             "duration": {
-              "description": "Duration of the segment (e.g., '1 min')",
-              "pattern": "^\\d+\\s*min$",
+              "description": "Duration of the segment (e.g., '1:00')",
+              "pattern": "^\\d+:\\d+$",
+              "type": "string"
+            },
+            "title": {
+              "minLength": 1,
               "type": "string"
             },
             "who": {
@@ -179,50 +161,22 @@
           "description": "Spiritual treasures section with multiple subsections",
           "properties": {
             "bible_reading": {
+              "$ref": "#/definitions/segment",
               "additionalProperties": false,
-              "description": "Bible reading segment",
-              "properties": {
-                "duration": {
-                  "pattern": "^\\d+\\s*min$",
-                  "type": "string"
-                },
-                "who": {
-                  "minLength": 1,
-                  "type": "string"
-                }
-              },
-              "required": [
-                "who",
-                "duration"
-              ],
-              "type": "object"
-            },
-            "jewels": {
-              "additionalProperties": false,
-              "description": "Spiritual jewels segment",
-              "properties": {
-                "duration": {
-                  "pattern": "^\\d+\\s*min$",
-                  "type": "string"
-                },
-                "who": {
-                  "minLength": 1,
-                  "type": "string"
-                }
-              },
-              "required": [
-                "who",
-                "duration"
-              ],
               "type": "object"
             },
             "speech": {
               "$ref": "#/definitions/segment"
+            },
+            "spiritual_gems": {
+              "$ref": "#/definitions/segment",
+              "additionalProperties": false,
+              "type": "object"
             }
           },
           "required": [
             "speech",
-            "jewels",
+            "spiritual_gems",
             "bible_reading"
           ],
           "type": "object"
@@ -254,7 +208,7 @@
       "description": "A segment with speaker, title, and duration",
       "properties": {
         "duration": {
-          "pattern": "^\\d+\\s*min$",
+          "pattern": "^\\d+:\\d+$",
           "type": "string"
         },
         "title": {
@@ -280,6 +234,12 @@
         "bible_reading": {
           "description": "Bible reading reference",
           "minLength": 1,
+          "type": "string"
+        },
+        "kind": {
+          "enum": [
+            "specialEvent"
+          ],
           "type": "string"
         },
         "no_meeting": {
@@ -325,11 +285,16 @@
         "christian_life": {
           "additionalProperties": false,
           "properties": {
-            "kind": {
-              "enum": [
-                "visit"
+            "overseer_speech": {
+              "$ref": "#/definitions/segment",
+              "additionalProperties": false,
+              "description": "Visiting speaker who addresses the congregation",
+              "required": [
+                "name",
+                "title",
+                "duration"
               ],
-              "type": "string"
+              "type": "object"
             },
             "parts": {
               "items": {
@@ -337,64 +302,27 @@
               },
               "minItems": 1,
               "type": "array"
-            },
-            "visit": {
-              "additionalProperties": false,
-              "description": "Visiting speaker who addresses the congregation",
-              "properties": {
-                "duration": {
-                  "description": "Duration of the visit speech",
-                  "pattern": "^\\d+\\s*min$",
-                  "type": "string"
-                },
-                "name": {
-                  "description": "Name of the visiting speaker",
-                  "minLength": 1,
-                  "type": "string"
-                },
-                "title": {
-                  "description": "Speech title",
-                  "minLength": 1,
-                  "type": "string"
-                }
-              },
-              "required": [
-                "name",
-                "title",
-                "duration"
-              ],
-              "type": "object"
             }
           },
           "required": [
             "parts",
-            "visit"
+            "overseer_speech"
           ],
           "type": "object"
         },
         "final_comments": {
-          "additionalProperties": false,
-          "properties": {
-            "duration": {
-              "pattern": "^\\d+\\s*min$",
-              "type": "string"
-            },
-            "who": {
-              "minLength": 1,
-              "type": "string"
-            }
-          },
-          "required": [
-            "who",
-            "duration"
-          ],
-          "type": "object"
+          "$ref": "#/definitions/segment",
+          "additionalProperties": false
         },
         "initial_comments": {
           "additionalProperties": false,
           "properties": {
             "duration": {
-              "pattern": "^\\d+\\s*min$",
+              "pattern": "^\\d+:\\d+$",
+              "type": "string"
+            },
+            "title": {
+              "minLength": 1,
               "type": "string"
             },
             "who": {
@@ -407,6 +335,12 @@
             "duration"
           ],
           "type": "object"
+        },
+        "kind": {
+          "enum": [
+            "visit"
+          ],
+          "type": "string"
         },
         "ministry": {
           "items": {
@@ -437,48 +371,22 @@
           "additionalProperties": false,
           "properties": {
             "bible_reading": {
+              "$ref": "#/definitions/segment",
               "additionalProperties": false,
-              "properties": {
-                "duration": {
-                  "pattern": "^\\d+\\s*min$",
-                  "type": "string"
-                },
-                "who": {
-                  "minLength": 1,
-                  "type": "string"
-                }
-              },
-              "required": [
-                "who",
-                "duration"
-              ],
-              "type": "object"
-            },
-            "jewels": {
-              "additionalProperties": false,
-              "properties": {
-                "duration": {
-                  "pattern": "^\\d+\\s*min$",
-                  "type": "string"
-                },
-                "who": {
-                  "minLength": 1,
-                  "type": "string"
-                }
-              },
-              "required": [
-                "who",
-                "duration"
-              ],
               "type": "object"
             },
             "speech": {
               "$ref": "#/definitions/segment"
+            },
+            "spiritual_gems": {
+              "$ref": "#/definitions/segment",
+              "additionalProperties": false,
+              "type": "object"
             }
           },
           "required": [
             "speech",
-            "jewels",
+            "spiritual_gems",
             "bible_reading"
           ],
           "type": "object"
@@ -499,8 +407,7 @@
         "treasures",
         "ministry",
         "christian_life",
-        "final_comments",
-        "visit"
+        "final_comments"
       ],
       "title": "Visit Week",
       "type": "object"
