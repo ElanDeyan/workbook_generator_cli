@@ -1,4 +1,5 @@
 import 'dart:collection';
+import 'dart:io';
 
 import 'package:dev_utils/result.dart';
 import 'package:workbook_generator_core/domain/meeting_week/christian_life.dart';
@@ -7,152 +8,43 @@ import 'package:workbook_generator_core/domain/meeting_week/ministry.dart';
 import 'package:workbook_generator_core/domain/meeting_week/segments/assignment.dart';
 import 'package:workbook_generator_core/domain/meeting_week/treasures.dart';
 import 'package:workbook_generator_core/domain/shared/name.dart';
+import 'package:workbook_generator_core/protocols/shareable_text.dart';
 import 'package:workbook_generator_core/services/yaml_parser_service.dart';
 
 void main(List<String> args) async {
-  const sample = '''
-
-# # ============================================================================
-# # WORKBOOK SCHEMA - Multiple Document Format
-# # ============================================================================
-# # This YAML file contains multiple documents separated by ---
-# # Each document represents a different week in the workbook.
-# # Three types of weeks are supported:
-# #
-# # 1. Normal Meeting Week - regular weekly meetings with full programming
-# # 2. Special Event Week - no meeting (e.g., convention, assembly, special event)
-# # 3. Visit Week - visiting speaker replaces the congregation study
-# # ============================================================================
----
-- kind: normal
-  week: 4-10 de maio
-  bible_reading: ISAÍAS 58-59
-  songs:
-    - Cântico 21
-    - Cântico 100
-    - Cântico 42
-  prayers:
-    - Person 1
-    - Person 2
-  chairman: Person 1
-  initial_comments:
-    title: "Comentários iniciais"
-    who: Person 1
-    duration: 1:00
-  treasures:
-    speech:
-      who: Person 3
-      title: 1. Receba muitas bençãos de Jeová
-      duration: 10:00
-    spiritual_gems:
-      title: "2. Joias espirituais"
-      who: Person 4
-      duration: 10:00
-    bible_reading:
-      title: "3. Leitura da Bíblia"
-      who: Person 5
-      duration: 4:00
-  ministry:
-    - title: "4. Iniciando conversas"
-      duration: 3:00
-      who:
-        - Person 6
-        - Person 7
-    - title: "5. Iniciando conversas"
-      duration: 4:00
-      who:
-        - Person 8
-        - Person 9
-  christian_life:
-    parts:
-      - title: "Sempre mostrem hospitalidade"
-        duration: 15:00
-        who: Person 10
-    congregation_study:
-      title: Estudo bíblico de congregação
-      duration: 30:00
-      conductor: Person 11
-      reader: Person 12
-  final_comments:
-    title: "Comentários finais"
-    who: Person 1
-    duration: 3:00
----
-- kind: specialEvent
-  bible_reading: ISAÍAS 60-62
-  week: 11-17 de maio
-  reason: "Convenção Regional"
-  no_meeting: true
----
-- kind: visit
-  bible_reading: ISAÍAS 60-62
-  week: 11-17 de maio
-  prayers:
-    - Person 10
-    - Person 11
-  songs:
-    - Cântico 3
-    - Cântico 45
-    - Cântico 67
-  chairman: Person 1
-  initial_comments:
-    title: "Comentários iniciais"
-    who: Person 1
-    duration: 1:00
-  treasures:
-    speech:
-      who: Person 3
-      title: 1. Receba muitas bençãos de Jeová
-      duration: 10:00
-    spiritual_gems:
-      title: "2. Joias espirituais"
-      who: Person 4
-      duration: 10:00
-    bible_reading:
-      title: "3. Leitura da Bíblia"
-      who: Person 5
-      duration: 4:00
-  ministry:
-    - title: "4. Iniciando conversas"
-      duration: 3:00
-      who:
-        - Person 6
-        - Person 7
-    - title: "5. Iniciando conversas"
-      duration: 4:00
-      who:
-        - Person 8
-  christian_life:
-    parts:
-      - duration: 15:00
-        title: Part 1
-        who: Person 9
-    overseer_speech:
-      duration: 30:00
-      title: Theme
-      who: Overseer
-  final_comments:
-    duration: 3:00
-    title: Comentários finais
-    who: Chairman
-''';
   const yamlParser = YamlParserService();
 
-  final result = await yamlParser.fromString(sample);
+  final result = await yamlParser.fromString(
+    File('../../data/schema.yaml').readAsStringSync(),
+  );
   if (result.isErr) {
     print('Error parsing YAML: ${result.err}');
   } else {
     final meetingWeek = result.ok!;
-    print('Successfully parsed meeting week: $meetingWeek');
+    // print('Successfully parsed meeting week: $meetingWeek');
 
     final parseResult = [
       for (final map in meetingWeek) MeetingWeek.fromMap(map),
     ];
-    print('Parsed meeting weeks: $parseResult');
+
+    final file = File('output.txt')..createSync();
+    final resultBuffer = StringBuffer();
+
+    for (final meetingWeekResult in parseResult) {
+      if (meetingWeekResult.isErr) {
+        print('Error parsing meeting week from map: ${meetingWeekResult.err}');
+      } else {
+        resultBuffer.write(
+          '-----\n${meetingWeekResult.unwrap().toShareableText()}',
+        );
+      }
+    }
+
+    file.writeAsStringSync(resultBuffer.toString());
   }
 }
 
-sealed class MeetingWeek {
+sealed class MeetingWeek implements ShareableText {
   const MeetingWeek();
 
   bool get hasMeeting;
@@ -181,6 +73,7 @@ sealed class MeetingWeek {
 
 final class RegularMeetingWeek extends MeetingWeek {
   const RegularMeetingWeek({
+    required this.link,
     required this.weekRange,
     required this.bibleReading,
     required this.songs,
@@ -203,9 +96,92 @@ final class RegularMeetingWeek extends MeetingWeek {
   final ApplyYourselfToMinistry applyYourselfToMinistry;
   final ChristianLife christianLife;
   final SinglePersonAssignment finalComments;
+  final Uri link;
 
   @override
   bool get hasMeeting => true;
+
+  @override
+  String toShareableText({bool richText = false}) {
+    final buffer = StringBuffer()
+      ..writeln('Semana de $weekRange')
+      ..writeln()
+      ..writeln(bibleReading)
+      ..writeln()
+      ..writeln(songs.first)
+      ..writeln()
+      ..writeln(
+        'Presidente e ${initialComments.title} '
+        '(${initialComments.duration.inMinutes} min) '
+        '- ${initialComments.name}',
+      )
+      ..writeln()
+      ..writeln('TESOUROS DA PALAVRA DE DEUS')
+      ..writeln()
+      ..writeln(
+        '${treasuresFromGodsWord.speech.title} '
+        '(${treasuresFromGodsWord.speech.duration.inMinutes} min) '
+        '- ${treasuresFromGodsWord.speech.name}',
+      )
+      ..writeln()
+      ..writeln(
+        '${treasuresFromGodsWord.spiritualGems.title} '
+        '(${treasuresFromGodsWord.spiritualGems.duration.inMinutes} min) '
+        '- ${treasuresFromGodsWord.spiritualGems.name}',
+      )
+      ..writeln()
+      ..writeln(
+        '${treasuresFromGodsWord.bibleReading.title} '
+        '(${treasuresFromGodsWord.bibleReading.duration.inMinutes} min) '
+        '- ${treasuresFromGodsWord.bibleReading.name}',
+      )
+      ..writeln()
+      ..writeln('FAÇA SEU MELHOR NO MINISTÉRIO')
+      ..writeln()
+      ..writeAll([
+        for (final assignment in applyYourselfToMinistry.assignments)
+          '${assignment.title} (${assignment.duration.inMinutes} min) '
+              '- ${assignment.names.map((name) => name.toString()).join(' e ')}',
+      ], '\n\n')
+      ..writeln()
+      ..writeln()
+      ..writeln('NOSSA VIDA CRISTÃ')
+      ..writeln()
+      ..writeln(songs[1])
+      ..writeln()
+      ..writeAll([
+        for (final part in christianLife.initialParts)
+          '${part.title} (${part.duration.inMinutes} min) - ${part.name}',
+      ], '\n\n')
+      ..writeln()
+      ..writeln()
+      ..writeln(switch (christianLife) {
+        final OverseerVisitChristianLife overseerVisitChristianLife =>
+          '${overseerVisitChristianLife.overseerSpeech.title} '
+              '(${overseerVisitChristianLife.overseerSpeech.duration.inMinutes} min) '
+              '- ${overseerVisitChristianLife.overseerSpeech.name}',
+
+        final RegularChristianLife regularChristianLife =>
+          '${regularChristianLife.congregationStudy.title} '
+              '(${regularChristianLife.congregationStudy.duration.inMinutes} min) '
+              '- Dirigente: ${regularChristianLife.congregationStudy.conductor} '
+              '| Leitor: ${regularChristianLife.congregationStudy.reader}',
+      })
+      ..writeln()
+      ..writeln(
+        '${finalComments.title} '
+        '(${finalComments.duration.inMinutes} min) '
+        '- ${finalComments.name}',
+      )
+      ..writeln()
+      ..writeln(songs[2])
+      ..writeln()
+      ..writeln('Oração final: ${prayers.last}')
+      ..writeln()
+      ..writeln('$link');
+
+    return buffer.toString();
+  }
 
   @override
   String toString() {
@@ -227,6 +203,7 @@ final class RegularMeetingWeek extends MeetingWeek {
       'ministry': final List<Object?> ministryMap,
       'christian_life': final Map<String, Object?> christianLifeMap,
       'final_comments': final Map<String, Object?> finalCommentsMap,
+      'link': final String link,
     }) {
       final chairman = Name(chairmanName);
 
@@ -281,6 +258,15 @@ final class RegularMeetingWeek extends MeetingWeek {
         );
       }
 
+      final uriResult = Uri.tryParse(link);
+      if (uriResult == null) {
+        return .err(
+          FormatException(
+            'Error parsing link: Invalid URI format for link: $link',
+          ),
+        );
+      }
+
       return .ok(
         RegularMeetingWeek(
           weekRange: weekRange,
@@ -295,6 +281,7 @@ final class RegularMeetingWeek extends MeetingWeek {
           applyYourselfToMinistry: ministryResult.ok!,
           christianLife: christianLifeResult.ok!,
           finalComments: finalCommentsResult.ok!,
+          link: uriResult,
         ),
       );
     }
@@ -321,6 +308,12 @@ final class SpecialEventWeek extends MeetingWeek {
 
   @override
   bool get hasMeeting => false;
+
+  @override
+  String toShareableText({bool richText = false}) {
+    // TODO: implement toShareableText
+    throw UnimplementedError();
+  }
 
   @override
   String toString() {
@@ -363,6 +356,7 @@ final class VisitMeetingWeek extends MeetingWeek {
     required this.applyYourselfToMinistry,
     required this.overseerVisitChristianLife,
     required this.finalComments,
+    required this.link,
   });
 
   final String weekRange;
@@ -375,13 +369,19 @@ final class VisitMeetingWeek extends MeetingWeek {
   final ApplyYourselfToMinistry applyYourselfToMinistry;
   final OverseerVisitChristianLife overseerVisitChristianLife;
   final SinglePersonAssignment finalComments;
-
+  final Uri link;
   @override
   bool get hasMeeting => true;
 
   @override
+  String toShareableText({bool richText = false}) {
+    // TODO: implement toShareableText
+    throw UnimplementedError();
+  }
+
+  @override
   String toString() {
-    return 'VisitMeetingWeek(weekRange: $weekRange, bibleReading: $bibleReading, songs: $songs, prayers: $prayers, chairman: $chairman, initialComments: $initialComments, treasuresFromGodsWord: $treasuresFromGodsWord, applyYourselfToMinistry: $applyYourselfToMinistry, overseerVisitChristianLife: $overseerVisitChristianLife, finalComments: $finalComments)';
+    return 'VisitMeetingWeek(weekRange: $weekRange, bibleReading: $bibleReading, songs: $songs, prayers: $prayers, chairman: $chairman, initialComments: $initialComments, treasuresFromGodsWord: $treasuresFromGodsWord, applyYourselfToMinistry: $applyYourselfToMinistry, overseerVisitChristianLife: $overseerVisitChristianLife, finalComments: $finalComments, link: $link)';
   }
 
   static Result<VisitMeetingWeek, FormatException> fromMap(
@@ -399,6 +399,7 @@ final class VisitMeetingWeek extends MeetingWeek {
       'ministry': final List<Object?> ministryMap,
       'christian_life': final Map<String, Object?> christianLifeMap,
       'final_comments': final Map<String, Object?> finalCommentsMap,
+      'link': final String link,
     }) {
       final chairman = Name(chairmanName);
 
@@ -455,6 +456,15 @@ final class VisitMeetingWeek extends MeetingWeek {
         );
       }
 
+      final uriResult = Uri.tryParse(link);
+      if (uriResult == null) {
+        return .err(
+          FormatException(
+            'Error parsing link: Invalid URI format for link: $link',
+          ),
+        );
+      }
+
       return .ok(
         VisitMeetingWeek(
           weekRange: weekRange,
@@ -469,6 +479,7 @@ final class VisitMeetingWeek extends MeetingWeek {
           applyYourselfToMinistry: ministryResult.ok!,
           overseerVisitChristianLife: christianLifeResult.ok!,
           finalComments: finalCommentsResult.ok!,
+          link: uriResult,
         ),
       );
     }

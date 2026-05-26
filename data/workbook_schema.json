@@ -115,6 +115,7 @@
             }
           },
           "required": [
+            "title",
             "who",
             "duration"
           ],
@@ -124,6 +125,11 @@
           "enum": [
             "normal"
           ],
+          "type": "string"
+        },
+        "link": {
+          "description": "Optional link to the meeting agenda document",
+          "format": "uri",
           "type": "string"
         },
         "ministry": {
@@ -189,6 +195,7 @@
       },
       "required": [
         "kind",
+        "link",
         "week",
         "bible_reading",
         "songs",
@@ -331,6 +338,7 @@
             }
           },
           "required": [
+            "title",
             "who",
             "duration"
           ],
@@ -340,6 +348,11 @@
           "enum": [
             "visit"
           ],
+          "type": "string"
+        },
+        "link": {
+          "description": "Optional link to the meeting agenda document",
+          "format": "uri",
           "type": "string"
         },
         "ministry": {
@@ -399,6 +412,7 @@
       "required": [
         "kind",
         "week",
+        "link",
         "bible_reading",
         "songs",
         "prayers",
