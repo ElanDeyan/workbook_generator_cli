@@ -2,6 +2,7 @@ import 'dart:collection';
 import 'dart:io';
 
 import 'package:dev_utils/result.dart';
+import 'package:dev_utils/scope.dart';
 import 'package:workbook_generator_core/domain/meeting_week/christian_life.dart';
 import 'package:workbook_generator_core/domain/meeting_week/meeting_kind.dart';
 import 'package:workbook_generator_core/domain/meeting_week/ministry.dart';
@@ -10,6 +11,7 @@ import 'package:workbook_generator_core/domain/meeting_week/treasures.dart';
 import 'package:workbook_generator_core/domain/shared/name.dart';
 import 'package:workbook_generator_core/protocols/shareable_text.dart';
 import 'package:workbook_generator_core/services/yaml_parser_service.dart';
+import 'package:workbook_generator_core/utils/rich_text_utils.dart';
 
 void main(List<String> args) async {
   const yamlParser = YamlParserService();
@@ -35,7 +37,7 @@ void main(List<String> args) async {
         print('Error parsing meeting week from map: ${meetingWeekResult.err}');
       } else {
         resultBuffer.write(
-          '-----\n${meetingWeekResult.unwrap().toShareableText()}',
+          '-----\n${meetingWeekResult.unwrap().toShareableText(richTextKind: .whatsApp)}',
         );
       }
     }
@@ -102,81 +104,147 @@ final class RegularMeetingWeek extends MeetingWeek {
   bool get hasMeeting => true;
 
   @override
-  String toShareableText({bool richText = false}) {
+  String toShareableText({RichTextKind richTextKind = .none}) {
     final buffer = StringBuffer()
-      ..writeln('Semana de $weekRange')
+      ..writeln('Semana de $weekRange'.applyBoldBy(richTextKind))
       ..writeln()
-      ..writeln(bibleReading)
+      ..writeln(bibleReading.applyBoldBy(richTextKind))
       ..writeln()
-      ..writeln(songs.first)
-      ..writeln()
-      ..writeln(
+      ..writeln(songs.first.applyBoldBy(richTextKind))
+      ..writeln();
+    final chairmanTitle =
         'Presidente e ${initialComments.title} '
-        '(${initialComments.duration.inMinutes} min) '
-        '- ${initialComments.name}',
-      )
+                '(${initialComments.duration.inMinutes} min)'
+            .applyBoldBy(richTextKind);
+    final chairmanNames = '${initialComments.name}'.applyItalicBy(richTextKind);
+
+    buffer
+      ..writeln('$chairmanTitle - $chairmanNames')
       ..writeln()
-      ..writeln('TESOUROS DA PALAVRA DE DEUS')
-      ..writeln()
-      ..writeln(
+      ..writeln('TESOUROS DA PALAVRA DE DEUS'.applyBoldBy(richTextKind))
+      ..writeln();
+
+    final treasuresSpeechTitle =
         '${treasuresFromGodsWord.speech.title} '
-        '(${treasuresFromGodsWord.speech.duration.inMinutes} min) '
-        '- ${treasuresFromGodsWord.speech.name}',
-      )
-      ..writeln()
-      ..writeln(
+                '(${treasuresFromGodsWord.speech.duration.inMinutes} min)'
+            .applyBoldBy(richTextKind);
+    final treasuresSpeechName = '${treasuresFromGodsWord.speech.name}'
+        .applyItalicBy(richTextKind);
+
+    buffer
+      ..writeln('$treasuresSpeechTitle - $treasuresSpeechName')
+      ..writeln();
+
+    final spiritualGemsTitle =
         '${treasuresFromGodsWord.spiritualGems.title} '
-        '(${treasuresFromGodsWord.spiritualGems.duration.inMinutes} min) '
-        '- ${treasuresFromGodsWord.spiritualGems.name}',
-      )
-      ..writeln()
-      ..writeln(
+                '(${treasuresFromGodsWord.spiritualGems.duration.inMinutes} min)'
+            .applyBoldBy(richTextKind);
+    final spiritualGemsName = '${treasuresFromGodsWord.spiritualGems.name}'
+        .applyItalicBy(richTextKind);
+
+    buffer
+      ..writeln('$spiritualGemsTitle - $spiritualGemsName')
+      ..writeln();
+
+    final bibleReadingTitle =
         '${treasuresFromGodsWord.bibleReading.title} '
-        '(${treasuresFromGodsWord.bibleReading.duration.inMinutes} min) '
-        '- ${treasuresFromGodsWord.bibleReading.name}',
-      )
+                '(${treasuresFromGodsWord.bibleReading.duration.inMinutes} min)'
+            .applyBoldBy(richTextKind);
+
+    final bibleReadingName = '${treasuresFromGodsWord.bibleReading.name}'
+        .applyItalicBy(richTextKind);
+
+    buffer
+      ..writeln('$bibleReadingTitle - $bibleReadingName')
       ..writeln()
-      ..writeln('FAÇA SEU MELHOR NO MINISTÉRIO')
+      ..writeln('FAÇA SEU MELHOR NO MINISTÉRIO'.applyBoldBy(richTextKind))
       ..writeln()
       ..writeAll([
         for (final assignment in applyYourselfToMinistry.assignments)
-          '${assignment.title} (${assignment.duration.inMinutes} min) '
-              '- ${assignment.names.map((name) => name.toString()).join(' e ')}',
+          run(() {
+            final title =
+                '${assignment.title} '
+                        '(${assignment.duration.inMinutes} min)'
+                    .applyBoldBy(richTextKind);
+            final names = assignment.names
+                .map((name) => name.toString())
+                .join(' e ')
+                .applyItalicBy(richTextKind);
+
+            return '$title - $names';
+          }),
       ], '\n\n')
       ..writeln()
       ..writeln()
-      ..writeln('NOSSA VIDA CRISTÃ')
+      ..writeln('NOSSA VIDA CRISTÃ'.applyBoldBy(richTextKind))
       ..writeln()
-      ..writeln(songs[1])
+      ..writeln(songs[1].applyBoldBy(richTextKind))
       ..writeln()
       ..writeAll([
         for (final part in christianLife.initialParts)
-          '${part.title} (${part.duration.inMinutes} min) - ${part.name}',
+          run(() {
+            final title =
+                '${part.title} '
+                        '(${part.duration.inMinutes} min)'
+                    .applyBoldBy(richTextKind);
+            final name = part.name.self.applyItalicBy(richTextKind);
+
+            return '$title - $name';
+          }),
       ], '\n\n')
       ..writeln()
       ..writeln()
       ..writeln(switch (christianLife) {
-        final OverseerVisitChristianLife overseerVisitChristianLife =>
-          '${overseerVisitChristianLife.overseerSpeech.title} '
-              '(${overseerVisitChristianLife.overseerSpeech.duration.inMinutes} min) '
-              '- ${overseerVisitChristianLife.overseerSpeech.name}',
+        final OverseerVisitChristianLife overseerVisitChristianLife => run(() {
+          final title =
+              '${overseerVisitChristianLife.overseerSpeech.title} '
+                      '(${overseerVisitChristianLife.overseerSpeech.duration.inMinutes} min)'
+                  .applyBoldBy(richTextKind);
+          final name = overseerVisitChristianLife.overseerSpeech.name.self
+              .applyItalicBy(richTextKind);
 
-        final RegularChristianLife regularChristianLife =>
-          '${regularChristianLife.congregationStudy.title} '
-              '(${regularChristianLife.congregationStudy.duration.inMinutes} min) '
-              '- Dirigente: ${regularChristianLife.congregationStudy.conductor} '
-              '| Leitor: ${regularChristianLife.congregationStudy.reader}',
+          return '$title - $name';
+        }),
+
+        final RegularChristianLife regularChristianLife => run(() {
+          final title =
+              '${regularChristianLife.congregationStudy.title} '
+                      '(${regularChristianLife.congregationStudy.duration.inMinutes} min)'
+                  .applyBoldBy(richTextKind);
+          final conductor = regularChristianLife
+              .congregationStudy
+              .conductor
+              .self
+              .applyItalicBy(richTextKind);
+
+          final reader = regularChristianLife.congregationStudy.reader.self
+              .applyItalicBy(richTextKind);
+
+          return '$title - Dirigente: $conductor | Leitor: $reader';
+        }),
       })
-      ..writeln()
-      ..writeln(
+      ..writeln();
+
+    final finalCommentsTitle =
         '${finalComments.title} '
-        '(${finalComments.duration.inMinutes} min) '
-        '- ${finalComments.name}',
-      )
+                '(${finalComments.duration.inMinutes} min)'
+            .applyBoldBy(richTextKind);
+    final finalCommentsName = '${finalComments.name}'.applyItalicBy(
+      richTextKind,
+    );
+
+    buffer
+      ..writeln('$finalCommentsTitle - $finalCommentsName')
       ..writeln()
-      ..writeln(songs[2])
-      ..writeln()
-      ..writeln('Oração final: ${prayers.last}')
+      ..writeln(songs[2].applyBoldBy(richTextKind))
+      ..writeln();
+
+    final lastPrayerTitle = 'Oração final'.applyBoldBy(richTextKind);
+
+    final lastPrayerName = '${prayers.last}'.applyItalicBy(richTextKind);
+
+    buffer
+      ..writeln('$lastPrayerTitle - $lastPrayerName')
       ..writeln()
       ..writeln('$link');
 
@@ -185,7 +253,13 @@ final class RegularMeetingWeek extends MeetingWeek {
 
   @override
   String toString() {
-    return 'RegularMeetingWeek(weekRange: $weekRange, bibleReading: $bibleReading, songs: $songs, prayers: $prayers, chairman: $chairman, initialComments: $initialComments, treasuresFromGodsWord: $treasuresFromGodsWord, applyYourselfToMinistry: $applyYourselfToMinistry, christianLife: $christianLife, finalComments: $finalComments)';
+    return 'RegularMeetingWeek(weekRange: $weekRange, '
+        'bibleReading: $bibleReading, songs: $songs, '
+        'prayers: $prayers, chairman: $chairman, '
+        'initialComments: $initialComments, '
+        'treasuresFromGodsWord: $treasuresFromGodsWord, '
+        'applyYourselfToMinistry: $applyYourselfToMinistry, '
+        'christianLife: $christianLife, finalComments: $finalComments)';
   }
 
   static Result<RegularMeetingWeek, FormatException> fromMap(
@@ -310,7 +384,7 @@ final class SpecialEventWeek extends MeetingWeek {
   bool get hasMeeting => false;
 
   @override
-  String toShareableText({bool richText = false}) {
+  String toShareableText({RichTextKind richTextKind = .none}) {
     // TODO: implement toShareableText
     throw UnimplementedError();
   }
@@ -374,7 +448,7 @@ final class VisitMeetingWeek extends MeetingWeek {
   bool get hasMeeting => true;
 
   @override
-  String toShareableText({bool richText = false}) {
+  String toShareableText({RichTextKind richTextKind = .none}) {
     // TODO: implement toShareableText
     throw UnimplementedError();
   }

@@ -110,7 +110,7 @@ packages:
     description:
       path: "."
       ref: HEAD
-      resolved-ref: "979b5f0ff4b1b09b2488af68a03fe490f164b111"
+      resolved-ref: "5b4146412ce38b1b07fdebf4735836a81dfcf074"
       url: "https://github.com/ElanDeyan/dev_utils"
     source: git
     version: "1.0.0-dev.0"
