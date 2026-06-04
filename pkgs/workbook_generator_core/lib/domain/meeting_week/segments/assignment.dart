@@ -4,7 +4,10 @@ import 'package:dev_utils/result.dart';
 import 'package:workbook_generator_core/domain/shared/name.dart';
 
 sealed class Assignment {
-  const Assignment();
+  const Assignment({required this.title, required this.duration});
+
+  final String title;
+  final Duration duration;
 
   static Result<Assignment, FormatException> fromMap(
     Map<String, Object?> dartMap,
@@ -25,13 +28,11 @@ sealed class Assignment {
 
 final class MultiPersonAssignment extends Assignment {
   const MultiPersonAssignment({
-    required this.title,
-    required this.duration,
+    required super.title,
+    required super.duration,
     required this.names,
   });
 
-  final String title;
-  final Duration duration;
   final UnmodifiableListView<Name> names;
 
   @override
@@ -74,9 +75,9 @@ final class MultiPersonAssignment extends Assignment {
 
 final class SinglePersonAssignment extends Assignment {
   const SinglePersonAssignment({
+    required super.title,
+    required super.duration,
     required this.name,
-    required this.title,
-    required this.duration,
   });
 
   factory SinglePersonAssignment.spiritualGems({
@@ -85,8 +86,6 @@ final class SinglePersonAssignment extends Assignment {
   }) => .new(duration: duration, name: name, title: 'Joias espirituais');
 
   final Name name;
-  final String title;
-  final Duration duration;
 
   @override
   String toString() {

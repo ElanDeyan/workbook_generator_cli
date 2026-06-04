@@ -52,7 +52,7 @@ sealed class MeetingWeek implements ShareableText {
   bool get hasMeeting;
   MeetingKind get kind => switch (this) {
     RegularMeetingWeek() => .normal,
-    VisitMeetingWeek() => .visit,
+    OverseerVisitMeetingWeek() => .visit,
     SpecialEventWeek() => .specialEvent,
   };
 
@@ -62,7 +62,7 @@ sealed class MeetingWeek implements ShareableText {
     if (dartMap case {'kind': 'normal'}) {
       return RegularMeetingWeek.fromMap(dartMap);
     } else if (dartMap case {'kind': 'visit'}) {
-      return VisitMeetingWeek.fromMap(dartMap);
+      return OverseerVisitMeetingWeek.fromMap(dartMap);
     } else if (dartMap case {'kind': 'specialEvent'}) {
       return SpecialEventWeek.fromMap(dartMap);
     } else {
@@ -70,6 +70,154 @@ sealed class MeetingWeek implements ShareableText {
         const .new('Map does not contain a valid "kind" key for MeetingWeek.'),
       );
     }
+  }
+}
+
+final class OverseerVisitMeetingWeek extends MeetingWeek {
+  OverseerVisitMeetingWeek({
+    required this.weekRange,
+    required this.bibleReading,
+    required this.songs,
+    required this.prayers,
+    required this.chairman,
+    required this.initialComments,
+    required this.treasuresFromGodsWord,
+    required this.applyYourselfToMinistry,
+    required this.overseerVisitChristianLife,
+    required this.finalComments,
+    required this.link,
+  });
+
+  final String weekRange;
+  final String bibleReading;
+  final UnmodifiableListView<String> songs;
+  final UnmodifiableListView<Name> prayers;
+  final Name chairman;
+  final SinglePersonAssignment initialComments;
+  final TreasuresFromGodsWord treasuresFromGodsWord;
+  final ApplyYourselfToMinistry applyYourselfToMinistry;
+  final OverseerVisitChristianLife overseerVisitChristianLife;
+  final SinglePersonAssignment finalComments;
+  final Uri link;
+  @override
+  bool get hasMeeting => true;
+
+  @override
+  String toShareableText({RichTextKind richTextKind = .none}) {
+    // TODO: implement toShareableText
+    throw UnimplementedError();
+  }
+
+  @override
+  String toString() {
+    return 'VisitMeetingWeek(weekRange: $weekRange, bibleReading: $bibleReading, songs: $songs, prayers: $prayers, chairman: $chairman, initialComments: $initialComments, treasuresFromGodsWord: $treasuresFromGodsWord, applyYourselfToMinistry: $applyYourselfToMinistry, overseerVisitChristianLife: $overseerVisitChristianLife, finalComments: $finalComments, link: $link)';
+  }
+
+  static Result<OverseerVisitMeetingWeek, FormatException> fromMap(
+    Map<String, Object?> dartMap,
+  ) {
+    if (dartMap case {
+      'kind': 'visit',
+      'week': final String weekRange,
+      'bible_reading': final String bibleReading,
+      'songs': final List<Object?> songsList,
+      'prayers': final List<Object?> prayersList,
+      'chairman': final String chairmanName,
+      'initial_comments': final Map<String, Object?> initialCommentsMap,
+      'treasures': final Map<String, Object?> treasuresMap,
+      'ministry': final List<Object?> ministryMap,
+      'christian_life': final Map<String, Object?> christianLifeMap,
+      'final_comments': final Map<String, Object?> finalCommentsMap,
+      'link': final String link,
+    }) {
+      final chairman = Name(chairmanName);
+
+      final initialCommentsResult = SinglePersonAssignment.fromMap(
+        initialCommentsMap,
+      );
+      if (initialCommentsResult.isErr) {
+        return .err(
+          FormatException(
+            'Error parsing initial comments assignment: ${initialCommentsResult.err}',
+          ),
+        );
+      }
+
+      final treasuresResult = TreasuresFromGodsWord.fromMap(treasuresMap);
+      if (treasuresResult.isErr) {
+        return .err(
+          FormatException(
+            "Error parsing treasures from God's Word: ${treasuresResult.err}",
+          ),
+        );
+      }
+
+      final ministryResult = ApplyYourselfToMinistry.fromMap(
+        ministryMap.whereType<Map<String, Object?>>().toList(),
+      );
+      if (ministryResult.isErr) {
+        return .err(
+          FormatException(
+            'Error parsing apply yourself to ministry: ${ministryResult.err}',
+          ),
+        );
+      }
+
+      final christianLifeResult = OverseerVisitChristianLife.fromMap(
+        christianLifeMap,
+      );
+      if (christianLifeResult.isErr) {
+        return .err(
+          FormatException(
+            'Error parsing Overseer visit Christian life segment: ${christianLifeResult.err}',
+          ),
+        );
+      }
+
+      final finalCommentsResult = SinglePersonAssignment.fromMap(
+        finalCommentsMap,
+      );
+      if (finalCommentsResult.isErr) {
+        return .err(
+          FormatException(
+            'Error parsing final comments assignment: ${finalCommentsResult.err}',
+          ),
+        );
+      }
+
+      final uriResult = Uri.tryParse(link);
+      if (uriResult == null) {
+        return .err(
+          FormatException(
+            'Error parsing link: Invalid URI format for link: $link',
+          ),
+        );
+      }
+
+      return .ok(
+        OverseerVisitMeetingWeek(
+          weekRange: weekRange,
+          bibleReading: bibleReading,
+          songs: UnmodifiableListView(songsList.whereType<String>().toList()),
+          prayers: UnmodifiableListView(
+            prayersList.whereType<String>().toList().map(Name.new),
+          ),
+          chairman: chairman,
+          initialComments: initialCommentsResult.ok!,
+          treasuresFromGodsWord: treasuresResult.ok!,
+          applyYourselfToMinistry: ministryResult.ok!,
+          overseerVisitChristianLife: christianLifeResult.ok!,
+          finalComments: finalCommentsResult.ok!,
+          link: uriResult,
+        ),
+      );
+    }
+
+    return .err(
+      const .new(
+        'Map does not contain required keys for VisitMeetingWeek or has invalid types.',
+      ),
+    );
   }
 }
 
@@ -414,154 +562,6 @@ final class SpecialEventWeek extends MeetingWeek {
 
     return .err(
       const .new('Map does not contain required keys for SpecialEventWeek.'),
-    );
-  }
-}
-
-final class VisitMeetingWeek extends MeetingWeek {
-  VisitMeetingWeek({
-    required this.weekRange,
-    required this.bibleReading,
-    required this.songs,
-    required this.prayers,
-    required this.chairman,
-    required this.initialComments,
-    required this.treasuresFromGodsWord,
-    required this.applyYourselfToMinistry,
-    required this.overseerVisitChristianLife,
-    required this.finalComments,
-    required this.link,
-  });
-
-  final String weekRange;
-  final String bibleReading;
-  final UnmodifiableListView<String> songs;
-  final UnmodifiableListView<Name> prayers;
-  final Name chairman;
-  final SinglePersonAssignment initialComments;
-  final TreasuresFromGodsWord treasuresFromGodsWord;
-  final ApplyYourselfToMinistry applyYourselfToMinistry;
-  final OverseerVisitChristianLife overseerVisitChristianLife;
-  final SinglePersonAssignment finalComments;
-  final Uri link;
-  @override
-  bool get hasMeeting => true;
-
-  @override
-  String toShareableText({RichTextKind richTextKind = .none}) {
-    // TODO: implement toShareableText
-    throw UnimplementedError();
-  }
-
-  @override
-  String toString() {
-    return 'VisitMeetingWeek(weekRange: $weekRange, bibleReading: $bibleReading, songs: $songs, prayers: $prayers, chairman: $chairman, initialComments: $initialComments, treasuresFromGodsWord: $treasuresFromGodsWord, applyYourselfToMinistry: $applyYourselfToMinistry, overseerVisitChristianLife: $overseerVisitChristianLife, finalComments: $finalComments, link: $link)';
-  }
-
-  static Result<VisitMeetingWeek, FormatException> fromMap(
-    Map<String, Object?> dartMap,
-  ) {
-    if (dartMap case {
-      'kind': 'visit',
-      'week': final String weekRange,
-      'bible_reading': final String bibleReading,
-      'songs': final List<Object?> songsList,
-      'prayers': final List<Object?> prayersList,
-      'chairman': final String chairmanName,
-      'initial_comments': final Map<String, Object?> initialCommentsMap,
-      'treasures': final Map<String, Object?> treasuresMap,
-      'ministry': final List<Object?> ministryMap,
-      'christian_life': final Map<String, Object?> christianLifeMap,
-      'final_comments': final Map<String, Object?> finalCommentsMap,
-      'link': final String link,
-    }) {
-      final chairman = Name(chairmanName);
-
-      final initialCommentsResult = SinglePersonAssignment.fromMap(
-        initialCommentsMap,
-      );
-      if (initialCommentsResult.isErr) {
-        return .err(
-          FormatException(
-            'Error parsing initial comments assignment: ${initialCommentsResult.err}',
-          ),
-        );
-      }
-
-      final treasuresResult = TreasuresFromGodsWord.fromMap(treasuresMap);
-      if (treasuresResult.isErr) {
-        return .err(
-          FormatException(
-            "Error parsing treasures from God's Word: ${treasuresResult.err}",
-          ),
-        );
-      }
-
-      final ministryResult = ApplyYourselfToMinistry.fromMap(
-        ministryMap.whereType<Map<String, Object?>>().toList(),
-      );
-      if (ministryResult.isErr) {
-        return .err(
-          FormatException(
-            'Error parsing apply yourself to ministry: ${ministryResult.err}',
-          ),
-        );
-      }
-
-      final christianLifeResult = OverseerVisitChristianLife.fromMap(
-        christianLifeMap,
-      );
-      if (christianLifeResult.isErr) {
-        return .err(
-          FormatException(
-            'Error parsing Overseer visit Christian life segment: ${christianLifeResult.err}',
-          ),
-        );
-      }
-
-      final finalCommentsResult = SinglePersonAssignment.fromMap(
-        finalCommentsMap,
-      );
-      if (finalCommentsResult.isErr) {
-        return .err(
-          FormatException(
-            'Error parsing final comments assignment: ${finalCommentsResult.err}',
-          ),
-        );
-      }
-
-      final uriResult = Uri.tryParse(link);
-      if (uriResult == null) {
-        return .err(
-          FormatException(
-            'Error parsing link: Invalid URI format for link: $link',
-          ),
-        );
-      }
-
-      return .ok(
-        VisitMeetingWeek(
-          weekRange: weekRange,
-          bibleReading: bibleReading,
-          songs: UnmodifiableListView(songsList.whereType<String>().toList()),
-          prayers: UnmodifiableListView(
-            prayersList.whereType<String>().toList().map(Name.new),
-          ),
-          chairman: chairman,
-          initialComments: initialCommentsResult.ok!,
-          treasuresFromGodsWord: treasuresResult.ok!,
-          applyYourselfToMinistry: ministryResult.ok!,
-          overseerVisitChristianLife: christianLifeResult.ok!,
-          finalComments: finalCommentsResult.ok!,
-          link: uriResult,
-        ),
-      );
-    }
-
-    return .err(
-      const .new(
-        'Map does not contain required keys for VisitMeetingWeek or has invalid types.',
-      ),
     );
   }
 }
