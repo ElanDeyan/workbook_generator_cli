@@ -106,8 +106,11 @@ final class TreasuresFromGodsWordPresenter implements PdfPresenter {
         sectionTitle,
         pw.Divider(),
         speechRender,
+        pw.SizedBox(height: 8),
         spiritualGemsRender,
+        pw.SizedBox(height: 8),
         bibleReadingRender,
+        pw.SizedBox(height: 8),
       ],
     );
   }

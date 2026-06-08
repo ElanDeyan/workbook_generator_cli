@@ -110,34 +110,41 @@ final class ChristianLifePresenter implements PdfPresenter {
         for (final assignment in _christianLife.initialParts)
           _assignmentBuilder(assignment),
         lastPartRender,
+        pw.SizedBox(height: 8),
       ],
     );
   }
 
   pw.Widget _assignmentBuilder(Assignment assignment) {
-    return pw.RichText(
-      text: pw.TextSpan(
-        children: [
-          pw.TextSpan(
-            text: assignment.title,
-            style: .new(color: textAccentColor, fontWeight: .bold),
+    return pw.Column(
+      mainAxisSize: .min,
+      children: [
+        pw.RichText(
+          text: pw.TextSpan(
+            children: [
+              pw.TextSpan(
+                text: assignment.title,
+                style: .new(color: textAccentColor, fontWeight: .bold),
+              ),
+              const pw.TextSpan(text: ' '),
+              pw.TextSpan(text: '(${assignment.duration.inMinutes} min)'),
+              const pw.TextSpan(text: ' - '),
+              switch (assignment) {
+                MultiPersonAssignment(:final names) => pw.TextSpan(
+                  text: names.join(' e '),
+                  style: .new(fontStyle: .italic),
+                ),
+                SinglePersonAssignment(:final name) => pw.TextSpan(
+                  text: name.self,
+                  style: .new(fontStyle: .italic),
+                ),
+              },
+            ],
+            style: const .new(fontSize: 14),
           ),
-          const pw.TextSpan(text: ' '),
-          pw.TextSpan(text: '(${assignment.duration.inMinutes} min)'),
-          const pw.TextSpan(text: ' - '),
-          switch (assignment) {
-            MultiPersonAssignment(:final names) => pw.TextSpan(
-              text: names.join(' e '),
-              style: .new(fontStyle: .italic),
-            ),
-            SinglePersonAssignment(:final name) => pw.TextSpan(
-              text: name.self,
-              style: .new(fontStyle: .italic),
-            ),
-          },
-        ],
-        style: const .new(fontSize: 14),
-      ),
+        ),
+        pw.SizedBox(height: 8),
+      ],
     );
   }
 }
