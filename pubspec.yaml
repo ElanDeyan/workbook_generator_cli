@@ -1,7 +1,7 @@
 name: workbook_generator
 description: A dart workspace for building meeting workbooks
 version: 0.0.1
-# repository: https://github.com/my_org/my_repo
+repository: https://github.com/ElanDeyan/workbook_generator_cli
 
 environment:
   sdk: ^3.12.0
@@ -9,3 +9,5 @@ environment:
 workspace:
   - pkgs/workbook_generator_cli
   - pkgs/workbook_generator_core
+dev_dependencies:
+  very_good_analysis: ^10.2.0

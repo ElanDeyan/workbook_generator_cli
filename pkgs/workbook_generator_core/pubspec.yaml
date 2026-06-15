@@ -2,7 +2,7 @@ name: workbook_generator_core
 description: A starting point for Dart libraries or applications.
 version: 1.0.0
 publish_to: none
-# repository: https://github.com/my_org/my_repo
+repository: https://github.com/ElanDeyan/workbook_generator_cli
 
 environment:
   sdk: ^3.12.0
@@ -10,12 +10,12 @@ environment:
 resolution: workspace
 
 dependencies:
-  pdf: ^3.12.0
-  yaml: ^3.1.3
+  cross_file: ^0.3.5+2
   dev_utils:
     git:
       url: https://github.com/ElanDeyan/dev_utils
-  cross_file: ^0.3.5+2
+  pdf: ^3.12.0
+  yaml: ^3.1.3
 
 dev_dependencies:
   lints: ^6.0.0
