@@ -64,19 +64,21 @@ Future<XFile> generatePdf(Set<MeetingWeek> meetingWeeks) async {
 }
 
 Future<pw.Page> _buildPage(MeetingWeek meetingWeek) async {
-  if (meetingWeek is! RegularMeetingWeek) {
-    throw UnimplementedError('Only RegularMeetingWeek is supported');
-  }
-
   const iconProvider = IconProvider();
+  late final musicNoteSvgImage = pw.SvgImage(
+    svg: iconProvider.musicNoteIcon.readAsStringSync(),
+    colorFilter: PdfColors.black,
+    width: 12,
+    height: 12,
+  );
 
   final pageHeader = pw.Row(
     children: [
-      pw.Text('IMBUÍ', style: .new(fontWeight: .bold)),
+      pw.Text('IMBUÍ', style: const .new(fontWeight: .bold)),
       pw.Spacer(),
       pw.Text(
         'PROGRAMAÇÃO DA REUNIÃO',
-        style: .new(fontWeight: .bold, fontSize: 18),
+        style: const .new(fontWeight: .bold, fontSize: 18),
         maxLines: 2,
         softWrap: true,
         overflow: .clip,
@@ -95,10 +97,10 @@ Future<pw.Page> _buildPage(MeetingWeek meetingWeek) async {
         const pw.TextSpan(text: ' | '),
         pw.TextSpan(
           text: meetingWeek.bibleReading.toUpperCase(),
-          style: .new(fontWeight: .bold),
+          style: const .new(fontWeight: .bold),
         ),
         if (meetingWeek is OverseerVisitMeetingWeek)
-          pw.TextSpan(
+          const pw.TextSpan(
             text: '(SEMANA DA VISITA)',
             style: .new(fontWeight: .bold),
           ),
@@ -107,12 +109,27 @@ Future<pw.Page> _buildPage(MeetingWeek meetingWeek) async {
     ),
   );
 
-  final musicNoteSvgImage = pw.SvgImage(
-    svg: iconProvider.musicNoteIcon.readAsStringSync(),
-    colorFilter: PdfColors.black,
-    width: 12,
-    height: 12,
-  );
+  if (meetingWeek is SpecialEventWeek) {
+    return pw.Page(
+      orientation: .portrait,
+      pageFormat: .a4,
+      build: (context) {
+        return pw.Column(
+          mainAxisSize: .min,
+          crossAxisAlignment: .start,
+          children: [
+            pageHeader,
+            pw.Divider(thickness: 2),
+            meetingWeekHeader,
+            pw.SizedBox(height: 8),
+            pw.Center(child: pw.Text(meetingWeek.reason)),
+          ],
+        );
+      },
+    );
+  }
+
+  final ProgrammedMeetingWeek programmedMeetingWeek = meetingWeek;
 
   final firstSongAndPrayer = pw.Row(
     mainAxisSize: .min,
@@ -127,7 +144,7 @@ Future<pw.Page> _buildPage(MeetingWeek meetingWeek) async {
             const pw.TextSpan(text: 'oração inicial: '),
             pw.TextSpan(text: meetingWeek.prayers.first.self),
           ],
-          style: .new(fontSize: 12, fontWeight: .bold),
+          style: const .new(fontSize: 12, fontWeight: .bold),
         ),
       ),
     ],
@@ -141,12 +158,12 @@ Future<pw.Page> _buildPage(MeetingWeek meetingWeek) async {
               'Presidente e '
               '${meetingWeek.initialComments.title} '
               '(${meetingWeek.initialComments.duration.inMinutes} min)',
-          style: .new(fontWeight: .bold),
+          style: const .new(fontWeight: .bold),
         ),
         const pw.TextSpan(text: ' - '),
         pw.TextSpan(
           text: meetingWeek.initialComments.name.self,
-          style: .new(fontStyle: .italic),
+          style: const .new(fontStyle: .italic),
         ),
       ],
       style: const .new(fontSize: 12),
@@ -159,16 +176,16 @@ Future<pw.Page> _buildPage(MeetingWeek meetingWeek) async {
       children: [
         pw.TextSpan(
           text: meetingWeek.finalComments.title,
-          style: .new(fontWeight: .bold),
+          style: const .new(fontWeight: .bold),
         ),
         pw.TextSpan(
           text: ' (${meetingWeek.finalComments.duration.inMinutes} min) ',
-          style: .new(fontWeight: .bold),
+          style: const .new(fontWeight: .bold),
         ),
         const pw.TextSpan(text: ' - '),
         pw.TextSpan(
           text: meetingWeek.finalComments.name.self,
-          style: .new(fontStyle: .italic),
+          style: const .new(fontStyle: .italic),
         ),
       ],
     ),
@@ -184,15 +201,15 @@ Future<pw.Page> _buildPage(MeetingWeek meetingWeek) async {
           children: [
             pw.TextSpan(
               text: meetingWeek.songs.last,
-              style: .new(fontWeight: .bold),
+              style: const .new(fontWeight: .bold),
             ),
-            pw.TextSpan(
+            const pw.TextSpan(
               text: ' e oração final: ',
               style: .new(fontWeight: .bold),
             ),
             pw.TextSpan(
               text: meetingWeek.prayers.last.self,
-              style: .new(fontStyle: .italic),
+              style: const .new(fontStyle: .italic),
             ),
           ],
           style: const .new(fontSize: 12),

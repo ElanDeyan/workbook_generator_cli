@@ -115,7 +115,7 @@ const _sample = '''
     duration: 3 min
 ''';
 
-final class YamlParserService implements IParserService {
+final class YamlParserService implements ParserService {
   const YamlParserService();
   @override
   FutureResult<List<Map<String, Object?>>, FormatException> fromString(
