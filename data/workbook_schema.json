@@ -249,6 +249,11 @@
           ],
           "type": "string"
         },
+        "link": {
+          "description": "Optional link to the meeting agenda document",
+          "format": "uri",
+          "type": "string"
+        },
         "no_meeting": {
           "description": "Flag indicating this is a special event week with no meeting",
           "enum": [
@@ -270,6 +275,7 @@
       "required": [
         "kind",
         "week",
+        "link",
         "bible_reading",
         "no_meeting",
         "reason"
