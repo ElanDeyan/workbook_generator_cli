@@ -16,11 +16,13 @@ final class SpecialEventWeek extends MeetingWeek {
   @override
   String toShareableText({RichTextKind richTextKind = .none}) {
     final buffer = StringBuffer()
-      ..writeln('Semana de $weekRange')
+      ..writeln('Semana de $weekRange'.applyBoldBy(richTextKind))
       ..writeln()
-      ..writeln(bibleReading)
+      ..writeln(bibleReading.applyBoldBy(richTextKind))
       ..writeln()
-      ..writeln(reason);
+      ..writeln(reason.applyBoldBy(richTextKind))
+      ..writeln()
+      ..writeln(link.toString());
 
     return buffer.toString();
   }

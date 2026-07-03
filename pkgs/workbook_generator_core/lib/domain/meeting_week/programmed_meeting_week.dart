@@ -1,6 +1,6 @@
 part of 'meeting_week.dart';
 
-sealed class ProgrammedMeetingWeek extends MeetingWeek {
+sealed class ProgrammedMeetingWeek<C extends ChristianLife> extends MeetingWeek {
   const ProgrammedMeetingWeek({
     required super.weekRange,
     required super.bibleReading,
@@ -11,6 +11,7 @@ sealed class ProgrammedMeetingWeek extends MeetingWeek {
     required this.initialComments,
     required this.treasuresFromGodsWord,
     required this.applyYourselfToMinistry,
+    required this.christianLife,
     required this.finalComments,
   });
 
@@ -20,5 +21,6 @@ sealed class ProgrammedMeetingWeek extends MeetingWeek {
   final SinglePersonAssignment initialComments;
   final TreasuresFromGodsWord treasuresFromGodsWord;
   final ApplyYourselfToMinistry applyYourselfToMinistry;
+  final C christianLife;
   final SinglePersonAssignment finalComments;
 }

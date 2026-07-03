@@ -7,12 +7,14 @@ import 'package:workbook_generator_core/services/icon_provider.dart';
 
 final class ChristianLifePresenter implements PdfPresenter {
   ChristianLifePresenter({
+    required this.finalCommentsWidget,
     required this.midMeetingSong,
     required this._christianLife,
   });
 
   final ChristianLife _christianLife;
   final String midMeetingSong;
+  final pw.Widget finalCommentsWidget;
 
   @override
   PdfColor get iconAccentColor => .fromHex('#BF2F14');
@@ -58,25 +60,25 @@ final class ChristianLifePresenter implements PdfPresenter {
             const pw.TextSpan(text: ' '),
             pw.TextSpan(text: '(${congregationStudy.duration.inMinutes} min)'),
             const pw.TextSpan(text: ' - '),
-            pw.TextSpan(
+            const pw.TextSpan(
               text: 'Dirigente: ',
               style: .new(fontWeight: .bold),
             ),
             pw.TextSpan(
               text: '${congregationStudy.conductor}',
-              style: .new(fontStyle: .italic),
+              style: const .new(fontStyle: .italic),
             ),
-            pw.TextSpan(
+            const pw.TextSpan(
               text: ' | ',
               style: .new(fontWeight: .bold),
             ),
-            pw.TextSpan(
+            const pw.TextSpan(
               text: 'Leitor: ',
               style: .new(fontWeight: .bold),
             ),
             pw.TextSpan(
               text: '${congregationStudy.reader}',
-              style: .new(fontStyle: .italic),
+              style: const .new(fontStyle: .italic),
             ),
           ],
           style: const .new(fontSize: 14),
@@ -96,7 +98,10 @@ final class ChristianLifePresenter implements PdfPresenter {
       children: [
         musicNoteSvgImage,
         pw.SizedBox(width: 2),
-        pw.Text(midMeetingSong, style: .new(fontWeight: .bold, fontSize: 12)),
+        pw.Text(
+          midMeetingSong,
+          style: const .new(fontWeight: .bold, fontSize: 12),
+        ),
       ],
     );
 
@@ -109,8 +114,18 @@ final class ChristianLifePresenter implements PdfPresenter {
         midweekSongRender,
         for (final assignment in _christianLife.initialParts)
           _assignmentBuilder(assignment),
-        lastPartRender,
-        pw.SizedBox(height: 8),
+        ...switch (_christianLife) {
+          OverseerVisitChristianLife() => [
+            finalCommentsWidget,
+            pw.SizedBox(height: 8),
+            lastPartRender,
+          ],
+          RegularChristianLife() => [
+            lastPartRender,
+            pw.SizedBox(height: 8),
+            finalCommentsWidget,
+          ],
+        },
       ],
     );
   }
@@ -132,11 +147,11 @@ final class ChristianLifePresenter implements PdfPresenter {
               switch (assignment) {
                 MultiPersonAssignment(:final names) => pw.TextSpan(
                   text: names.join(' e '),
-                  style: .new(fontStyle: .italic),
+                  style: const .new(fontStyle: .italic),
                 ),
                 SinglePersonAssignment(:final name) => pw.TextSpan(
                   text: name.self,
-                  style: .new(fontStyle: .italic),
+                  style: const .new(fontStyle: .italic),
                 ),
               },
             ],

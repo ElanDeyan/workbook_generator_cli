@@ -67,11 +67,11 @@ final class ApplyYourselfToMinistryPresenter implements PdfPresenter {
               switch (assignment) {
                 MultiPersonAssignment(:final names) => pw.TextSpan(
                   text: names.join(' e '),
-                  style: .new(fontStyle: .italic),
+                  style: const .new(fontStyle: .italic),
                 ),
                 SinglePersonAssignment(:final name) => pw.TextSpan(
                   text: name.self,
-                  style: .new(fontStyle: .italic),
+                  style: const .new(fontStyle: .italic),
                 ),
               },
             ],

@@ -52,7 +52,7 @@ final class TreasuresFromGodsWordPresenter implements PdfPresenter {
           const pw.TextSpan(text: ' - '),
           pw.TextSpan(
             text: '${speech.name}',
-            style: .new(fontStyle: .italic),
+            style: const .new(fontStyle: .italic),
           ),
         ],
         style: const .new(fontSize: 14),
@@ -72,7 +72,7 @@ final class TreasuresFromGodsWordPresenter implements PdfPresenter {
           const pw.TextSpan(text: ' - '),
           pw.TextSpan(
             text: '${spiritualGems.name}',
-            style: .new(fontStyle: .italic),
+            style: const .new(fontStyle: .italic),
           ),
         ],
         style: const .new(fontSize: 14),
@@ -92,7 +92,7 @@ final class TreasuresFromGodsWordPresenter implements PdfPresenter {
           const pw.TextSpan(text: ' - '),
           pw.TextSpan(
             text: '${bibleReading.name}',
-            style: .new(fontStyle: .italic),
+            style: const .new(fontStyle: .italic),
           ),
         ],
         style: const .new(fontSize: 14),

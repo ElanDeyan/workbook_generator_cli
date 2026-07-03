@@ -1,6 +1,7 @@
 part of 'meeting_week.dart';
 
-final class OverseerVisitMeetingWeek extends ProgrammedMeetingWeek {
+final class OverseerVisitMeetingWeek
+    extends ProgrammedMeetingWeek<OverseerVisitChristianLife> {
   OverseerVisitMeetingWeek({
     required super.weekRange,
     required super.bibleReading,
@@ -10,12 +11,10 @@ final class OverseerVisitMeetingWeek extends ProgrammedMeetingWeek {
     required super.initialComments,
     required super.treasuresFromGodsWord,
     required super.applyYourselfToMinistry,
+    required super.christianLife,
     required super.finalComments,
     required super.link,
-    required this.overseerVisitChristianLife,
   });
-
-  final OverseerVisitChristianLife overseerVisitChristianLife;
 
   @override
   bool get hasMeeting => true;
@@ -102,7 +101,7 @@ final class OverseerVisitMeetingWeek extends ProgrammedMeetingWeek {
       ..writeln(songs[1].applyBoldBy(richTextKind))
       ..writeln()
       ..writeAll([
-        for (final part in overseerVisitChristianLife.initialParts)
+        for (final part in christianLife.initialParts)
           run(() {
             final title =
                 '${part.title} '
@@ -117,15 +116,12 @@ final class OverseerVisitMeetingWeek extends ProgrammedMeetingWeek {
       ..writeln();
 
     final overseerSpeechTitle =
-        '${overseerVisitChristianLife.overseerSpeech.title} '
-                '(${overseerVisitChristianLife.overseerSpeech.duration.inMinutes} min)'
+        '${christianLife.overseerSpeech.title} '
+                '(${christianLife.overseerSpeech.duration.inMinutes} min)'
             .applyBoldBy(richTextKind);
-    final overseerName = overseerVisitChristianLife.overseerSpeech.name.self
-        .applyItalicBy(richTextKind);
-
-    buffer
-      ..writeln('$overseerSpeechTitle - $overseerName')
-      ..writeln();
+    final overseerName = christianLife.overseerSpeech.name.self.applyItalicBy(
+      richTextKind,
+    );
 
     final finalCommentsTitle =
         '${finalComments.title} '
@@ -137,6 +133,8 @@ final class OverseerVisitMeetingWeek extends ProgrammedMeetingWeek {
 
     buffer
       ..writeln('$finalCommentsTitle - $finalCommentsName')
+      ..writeln()
+      ..writeln('$overseerSpeechTitle - $overseerName')
       ..writeln()
       ..writeln(songs[2].applyBoldBy(richTextKind))
       ..writeln();
@@ -160,7 +158,7 @@ final class OverseerVisitMeetingWeek extends ProgrammedMeetingWeek {
         'chairman: $chairman, initialComments: $initialComments, '
         'treasuresFromGodsWord: $treasuresFromGodsWord, '
         'applyYourselfToMinistry: $applyYourselfToMinistry, '
-        'overseerVisitChristianLife: $overseerVisitChristianLife, '
+        'overseerVisitChristianLife: $christianLife, '
         'finalComments: $finalComments, link: $link)';
   }
 
@@ -257,7 +255,7 @@ final class OverseerVisitMeetingWeek extends ProgrammedMeetingWeek {
           initialComments: initialCommentsResult.unwrap(),
           treasuresFromGodsWord: treasuresResult.unwrap(),
           applyYourselfToMinistry: ministryResult.unwrap(),
-          overseerVisitChristianLife: christianLifeResult.unwrap(),
+          christianLife: christianLifeResult.unwrap(),
           finalComments: finalCommentsResult.unwrap(),
           link: uriResult,
         ),

@@ -101,7 +101,7 @@ Future<pw.Page> _buildPage(MeetingWeek meetingWeek) async {
         ),
         if (meetingWeek is OverseerVisitMeetingWeek)
           const pw.TextSpan(
-            text: '(SEMANA DA VISITA)',
+            text: ' (VISITA DO SUPERINTENDENTE)',
             style: .new(fontWeight: .bold),
           ),
       ],
@@ -109,155 +109,161 @@ Future<pw.Page> _buildPage(MeetingWeek meetingWeek) async {
     ),
   );
 
-  if (meetingWeek is SpecialEventWeek) {
-    return pw.Page(
-      orientation: .portrait,
-      pageFormat: .a4,
-      build: (context) {
-        return pw.Column(
-          mainAxisSize: .min,
-          crossAxisAlignment: .start,
-          children: [
-            pageHeader,
-            pw.Divider(thickness: 2),
-            meetingWeekHeader,
-            pw.SizedBox(height: 8),
-            pw.Center(child: pw.Text(meetingWeek.reason)),
-          ],
-        );
-      },
-    );
-  }
+  switch (meetingWeek) {
+    case SpecialEventWeek(:final reason):
+      return pw.Page(
+        orientation: .portrait,
+        pageFormat: .a4,
+        build: (context) {
+          return pw.Column(
+            mainAxisSize: .min,
+            crossAxisAlignment: .start,
+            children: [
+              pageHeader,
+              pw.Divider(thickness: 2),
+              meetingWeekHeader,
+              pw.SizedBox(height: 8),
+              pw.Expanded(
+                child: pw.Center(
+                  child: pw.Text(
+                    reason,
+                    textAlign: .center,
+                    style: const .new(fontWeight: .bold, fontSize: 28),
+                  ),
+                ),
+              ),
+            ],
+          );
+        },
+      );
+    case final ProgrammedMeetingWeek meetingWeek:
+      final firstSongAndPrayer = pw.Row(
+        mainAxisSize: .min,
+        children: [
+          musicNoteSvgImage,
+          pw.SizedBox(width: 2),
+          pw.RichText(
+            text: pw.TextSpan(
+              children: [
+                pw.TextSpan(text: meetingWeek.songs.first),
+                const pw.TextSpan(text: ' e '),
+                const pw.TextSpan(text: 'oração inicial: '),
+                pw.TextSpan(text: meetingWeek.prayers.first.self),
+              ],
+              style: const .new(fontSize: 12, fontWeight: .bold),
+            ),
+          ),
+        ],
+      );
 
-  final ProgrammedMeetingWeek programmedMeetingWeek = meetingWeek;
-
-  final firstSongAndPrayer = pw.Row(
-    mainAxisSize: .min,
-    children: [
-      musicNoteSvgImage,
-      pw.SizedBox(width: 2),
-      pw.RichText(
-        text: pw.TextSpan(
-          children: [
-            pw.TextSpan(text: meetingWeek.songs.first),
-            const pw.TextSpan(text: ' e '),
-            const pw.TextSpan(text: 'oração inicial: '),
-            pw.TextSpan(text: meetingWeek.prayers.first.self),
-          ],
-          style: const .new(fontSize: 12, fontWeight: .bold),
-        ),
-      ),
-    ],
-  );
-
-  final chairmanAndInitialCommentsRender = pw.RichText(
-    text: pw.TextSpan(
-      children: [
-        pw.TextSpan(
-          text:
-              'Presidente e '
-              '${meetingWeek.initialComments.title} '
-              '(${meetingWeek.initialComments.duration.inMinutes} min)',
-          style: const .new(fontWeight: .bold),
-        ),
-        const pw.TextSpan(text: ' - '),
-        pw.TextSpan(
-          text: meetingWeek.initialComments.name.self,
-          style: const .new(fontStyle: .italic),
-        ),
-      ],
-      style: const .new(fontSize: 12),
-    ),
-  );
-
-  final finalCommentsRender = pw.RichText(
-    text: pw.TextSpan(
-      style: const .new(fontSize: 12),
-      children: [
-        pw.TextSpan(
-          text: meetingWeek.finalComments.title,
-          style: const .new(fontWeight: .bold),
-        ),
-        pw.TextSpan(
-          text: ' (${meetingWeek.finalComments.duration.inMinutes} min) ',
-          style: const .new(fontWeight: .bold),
-        ),
-        const pw.TextSpan(text: ' - '),
-        pw.TextSpan(
-          text: meetingWeek.finalComments.name.self,
-          style: const .new(fontStyle: .italic),
-        ),
-      ],
-    ),
-  );
-
-  final lastSongAndPrayer = pw.Row(
-    mainAxisSize: .min,
-    children: [
-      musicNoteSvgImage,
-      pw.SizedBox(width: 2),
-      pw.RichText(
+      final chairmanAndInitialCommentsRender = pw.RichText(
         text: pw.TextSpan(
           children: [
             pw.TextSpan(
-              text: meetingWeek.songs.last,
+              text:
+                  'Presidente e '
+                  '${meetingWeek.initialComments.title} '
+                  '(${meetingWeek.initialComments.duration.inMinutes} min)',
               style: const .new(fontWeight: .bold),
             ),
-            const pw.TextSpan(
-              text: ' e oração final: ',
-              style: .new(fontWeight: .bold),
-            ),
+            const pw.TextSpan(text: ' - '),
             pw.TextSpan(
-              text: meetingWeek.prayers.last.self,
+              text: meetingWeek.initialComments.name.self,
               style: const .new(fontStyle: .italic),
             ),
           ],
           style: const .new(fontSize: 12),
         ),
-      ),
-    ],
-  );
+      );
 
-  final treasuresPresenter = TreasuresFromGodsWordPresenter(
-    treasures: meetingWeek.treasuresFromGodsWord,
-  );
+      final finalCommentsRender = pw.RichText(
+        text: pw.TextSpan(
+          style: const .new(fontSize: 12),
+          children: [
+            pw.TextSpan(
+              text: meetingWeek.finalComments.title,
+              style: const .new(fontWeight: .bold),
+            ),
+            pw.TextSpan(
+              text: ' (${meetingWeek.finalComments.duration.inMinutes} min) ',
+              style: const .new(fontWeight: .bold),
+            ),
+            const pw.TextSpan(text: ' - '),
+            pw.TextSpan(
+              text: meetingWeek.finalComments.name.self,
+              style: const .new(fontStyle: .italic),
+            ),
+          ],
+        ),
+      );
 
-  final applyYourselfToMinistryPresenter = ApplyYourselfToMinistryPresenter(
-    applyYourselfToMinistry: meetingWeek.applyYourselfToMinistry,
-  );
-
-  final christianLifePresenter = ChristianLifePresenter(
-    christianLife: meetingWeek.christianLife,
-    midMeetingSong: meetingWeek.songs[1],
-  );
-
-  return pw.Page(
-    orientation: .portrait,
-    pageFormat: .a4,
-    build: (context) {
-      return pw.Column(
+      final lastSongAndPrayer = pw.Row(
         mainAxisSize: .min,
-        crossAxisAlignment: .start,
         children: [
-          pageHeader,
-          pw.Divider(thickness: 2),
-          meetingWeekHeader,
-          pw.SizedBox(height: 8),
-          firstSongAndPrayer,
-          pw.SizedBox(height: 8),
-          chairmanAndInitialCommentsRender,
-          pw.SizedBox(height: 8),
-          treasuresPresenter.toPdfWidget(),
-          pw.SizedBox(height: 8),
-          applyYourselfToMinistryPresenter.toPdfWidget(),
-          pw.SizedBox(height: 8),
-          christianLifePresenter.toPdfWidget(),
-          pw.SizedBox(height: 8),
-          finalCommentsRender,
-          pw.SizedBox(height: 8),
-          lastSongAndPrayer,
+          musicNoteSvgImage,
+          pw.SizedBox(width: 2),
+          pw.RichText(
+            text: pw.TextSpan(
+              children: [
+                pw.TextSpan(
+                  text: meetingWeek.songs.last,
+                  style: const .new(fontWeight: .bold),
+                ),
+                const pw.TextSpan(
+                  text: ' e oração final: ',
+                  style: .new(fontWeight: .bold),
+                ),
+                pw.TextSpan(
+                  text: meetingWeek.prayers.last.self,
+                  style: const .new(fontStyle: .italic),
+                ),
+              ],
+              style: const .new(fontSize: 12),
+            ),
+          ),
         ],
       );
-    },
-  );
+
+      final treasuresPresenter = TreasuresFromGodsWordPresenter(
+        treasures: meetingWeek.treasuresFromGodsWord,
+      );
+
+      final applyYourselfToMinistryPresenter = ApplyYourselfToMinistryPresenter(
+        applyYourselfToMinistry: meetingWeek.applyYourselfToMinistry,
+      );
+
+      final christianLifePresenter = ChristianLifePresenter(
+        christianLife: meetingWeek.christianLife,
+        midMeetingSong: meetingWeek.songs[1],
+        finalCommentsWidget: finalCommentsRender,
+      );
+
+      return pw.Page(
+        orientation: .portrait,
+        pageFormat: .a4,
+        build: (context) {
+          return pw.Column(
+            mainAxisSize: .min,
+            crossAxisAlignment: .start,
+            children: [
+              pageHeader,
+              pw.Divider(thickness: 2),
+              meetingWeekHeader,
+              pw.SizedBox(height: 8),
+              firstSongAndPrayer,
+              pw.SizedBox(height: 8),
+              chairmanAndInitialCommentsRender,
+              pw.SizedBox(height: 8),
+              treasuresPresenter.toPdfWidget(),
+              pw.SizedBox(height: 8),
+              applyYourselfToMinistryPresenter.toPdfWidget(),
+              pw.SizedBox(height: 8),
+              christianLifePresenter.toPdfWidget(),
+              pw.SizedBox(height: 8),
+              lastSongAndPrayer,
+            ],
+          );
+        },
+      );
+  }
 }

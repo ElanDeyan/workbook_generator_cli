@@ -1,6 +1,7 @@
 part of 'meeting_week.dart';
 
-final class RegularMeetingWeek extends ProgrammedMeetingWeek {
+final class RegularMeetingWeek
+    extends ProgrammedMeetingWeek<RegularChristianLife> {
   const RegularMeetingWeek({
     required super.link,
     required super.weekRange,
@@ -12,10 +13,8 @@ final class RegularMeetingWeek extends ProgrammedMeetingWeek {
     required super.treasuresFromGodsWord,
     required super.applyYourselfToMinistry,
     required super.finalComments,
-    required this.christianLife,
+    required super.christianLife,
   });
-
-  final ChristianLife christianLife;
 
   @override
   bool get hasMeeting => true;
@@ -111,35 +110,21 @@ final class RegularMeetingWeek extends ProgrammedMeetingWeek {
       ], '\n\n')
       ..writeln()
       ..writeln()
-      ..writeln(switch (christianLife) {
-        final OverseerVisitChristianLife overseerVisitChristianLife => run(() {
+      ..writeln(
+        run(() {
           final title =
-              '${overseerVisitChristianLife.overseerSpeech.title} '
-                      '(${overseerVisitChristianLife.overseerSpeech.duration.inMinutes} min)'
+              '${christianLife.congregationStudy.title} '
+                      '(${christianLife.congregationStudy.duration.inMinutes} min)'
                   .applyBoldBy(richTextKind);
-          final name = overseerVisitChristianLife.overseerSpeech.name.self
+          final conductor = christianLife.congregationStudy.conductor.self
               .applyItalicBy(richTextKind);
 
-          return '$title - $name';
-        }),
-
-        final RegularChristianLife regularChristianLife => run(() {
-          final title =
-              '${regularChristianLife.congregationStudy.title} '
-                      '(${regularChristianLife.congregationStudy.duration.inMinutes} min)'
-                  .applyBoldBy(richTextKind);
-          final conductor = regularChristianLife
-              .congregationStudy
-              .conductor
-              .self
-              .applyItalicBy(richTextKind);
-
-          final reader = regularChristianLife.congregationStudy.reader.self
+          final reader = christianLife.congregationStudy.reader.self
               .applyItalicBy(richTextKind);
 
           return '$title - Dirigente: $conductor | Leitor: $reader';
         }),
-      })
+      )
       ..writeln();
 
     final finalCommentsTitle =
@@ -229,7 +214,9 @@ final class RegularMeetingWeek extends ProgrammedMeetingWeek {
         );
       }
 
-      final christianLifeResult = ChristianLife.fromMap(christianLifeMap);
+      final christianLifeResult = RegularChristianLife.fromMap(
+        christianLifeMap,
+      );
       if (christianLifeResult.isErr) {
         return .err(
           FormatException(
