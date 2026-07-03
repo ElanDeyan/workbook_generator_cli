@@ -5,12 +5,12 @@
       "additionalProperties": false,
       "description": "A segment with title, duration, and multiple participants",
       "properties": {
-        "duration": {
-          "pattern": "^\\d+:\\d+$",
-          "type": "string"
-        },
         "title": {
           "minLength": 1,
+          "type": "string"
+        },
+        "duration": {
+          "pattern": "^\\d+:\\d+$",
           "type": "string"
         },
         "who": {
@@ -33,6 +33,17 @@
       "additionalProperties": false,
       "description": "A regular week with full meeting agenda",
       "properties": {
+        "kind": {
+          "enum": [
+            "normal"
+          ],
+          "type": "string"
+        },
+        "week": {
+          "description": "Week date range (e.g., '25-31 de maio')",
+          "minLength": 1,
+          "type": "string"
+        },
         "bible_reading": {
           "description": "Bible reading reference (e.g., 'ISAÍAS 65-66')",
           "minLength": 1,
@@ -43,101 +54,15 @@
           "minLength": 1,
           "type": "string"
         },
-        "christian_life": {
-          "additionalProperties": false,
-          "description": "Christian life section with discussion parts and congregation study",
-          "properties": {
-            "congregation_study": {
-              "additionalProperties": false,
-              "description": "Congregation Bible study",
-              "properties": {
-                "conductor": {
-                  "minLength": 1,
-                  "type": "string"
-                },
-                "duration": {
-                  "pattern": "^\\d+:\\d+$",
-                  "type": "string"
-                },
-                "reader": {
-                  "minLength": 1,
-                  "type": "string"
-                },
-                "title": {
-                  "minLength": 1,
-                  "type": "string"
-                }
-              },
-              "required": [
-                "title",
-                "duration",
-                "conductor",
-                "reader"
-              ],
-              "type": "object"
-            },
-            "parts": {
-              "items": {
-                "$ref": "#/definitions/segment"
-              },
-              "minItems": 1,
-              "type": "array"
-            }
-          },
-          "required": [
-            "parts",
-            "congregation_study"
-          ],
-          "type": "object"
-        },
-        "final_comments": {
-          "$ref": "#/definitions/segment",
-          "additionalProperties": false,
-          "description": "Final comments section"
-        },
-        "initial_comments": {
-          "additionalProperties": false,
-          "description": "Initial comments section",
-          "properties": {
-            "duration": {
-              "description": "Duration of the segment (e.g., '1:00')",
-              "pattern": "^\\d+:\\d+$",
-              "type": "string"
-            },
-            "title": {
-              "minLength": 1,
-              "type": "string"
-            },
-            "who": {
-              "description": "Person responsible for initial comments",
-              "minLength": 1,
-              "type": "string"
-            }
-          },
-          "required": [
-            "title",
-            "who",
-            "duration"
-          ],
-          "type": "object"
-        },
-        "kind": {
-          "enum": [
-            "normal"
-          ],
-          "type": "string"
-        },
-        "link": {
-          "description": "Optional link to the meeting agenda document",
-          "format": "uri",
-          "type": "string"
-        },
-        "ministry": {
-          "description": "Ministry demonstrations and talks",
+        "songs": {
+          "description": "List of songs to be performed (must be exactly 3)",
           "items": {
-            "$ref": "#/definitions/multiPersonSegment"
+            "description": "Song identifier (e.g., 'Cântico 24')",
+            "minLength": 1,
+            "type": "string"
           },
-          "minItems": 1,
+          "maxItems": 3,
+          "minItems": 3,
           "type": "array"
         },
         "prayers": {
@@ -151,30 +76,46 @@
           "minItems": 2,
           "type": "array"
         },
-        "songs": {
-          "description": "List of songs to be performed (must be exactly 3)",
-          "items": {
-            "description": "Song identifier (e.g., 'Cântico 24')",
-            "minLength": 1,
-            "type": "string"
+        "initial_comments": {
+          "additionalProperties": false,
+          "description": "Initial comments section",
+          "properties": {
+            "title": {
+              "minLength": 1,
+              "type": "string"
+            },
+            "duration": {
+              "description": "Duration of the segment (e.g., '1:00')",
+              "pattern": "^\\d+:\\d+$",
+              "type": "string",
+              "default": "1:00"
+            },
+            "who": {
+              "description": "Person responsible for initial comments",
+              "minLength": 1,
+              "type": "string"
+            }
           },
-          "maxItems": 3,
-          "minItems": 3,
-          "type": "array"
+          "required": [
+            "title",
+            "duration",
+            "who"
+          ],
+          "type": "object"
         },
         "treasures": {
           "additionalProperties": false,
           "description": "Spiritual treasures section with multiple subsections",
           "properties": {
-            "bible_reading": {
-              "$ref": "#/definitions/segment",
-              "additionalProperties": false,
-              "type": "object"
-            },
             "speech": {
               "$ref": "#/definitions/segment"
             },
             "spiritual_gems": {
+              "$ref": "#/definitions/segment",
+              "additionalProperties": false,
+              "type": "object"
+            },
+            "bible_reading": {
               "$ref": "#/definitions/segment",
               "additionalProperties": false,
               "type": "object"
@@ -187,25 +128,86 @@
           ],
           "type": "object"
         },
-        "week": {
-          "description": "Week date range (e.g., '25-31 de maio')",
-          "minLength": 1,
+        "ministry": {
+          "description": "Ministry demonstrations and talks",
+          "items": {
+            "$ref": "#/definitions/multiPersonSegment"
+          },
+          "minItems": 1,
+          "type": "array"
+        },
+        "christian_life": {
+          "additionalProperties": false,
+          "description": "Christian life section with discussion parts and congregation study",
+          "properties": {
+            "parts": {
+              "items": {
+                "$ref": "#/definitions/segment"
+              },
+              "minItems": 1,
+              "type": "array"
+            },
+            "congregation_study": {
+              "additionalProperties": false,
+              "description": "Congregation Bible study",
+              "properties": {
+                "title": {
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "duration": {
+                  "pattern": "^\\d+:\\d+$",
+                  "type": "string",
+                  "default": "30:00"
+                },
+                "conductor": {
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "reader": {
+                  "minLength": 1,
+                  "type": "string"
+                }
+              },
+              "required": [
+                "title",
+                "duration",
+                "conductor",
+                "reader"
+              ],
+              "type": "object"
+            }
+          },
+          "required": [
+            "parts",
+            "congregation_study"
+          ],
+          "type": "object"
+        },
+        "final_comments": {
+          "$ref": "#/definitions/segment",
+          "additionalProperties": false,
+          "description": "Final comments section"
+        },
+        "link": {
+          "description": "Optional link to the meeting agenda document",
+          "format": "uri",
           "type": "string"
         }
       },
       "required": [
         "kind",
-        "link",
         "week",
         "bible_reading",
+        "chairman",
         "songs",
         "prayers",
-        "chairman",
         "initial_comments",
         "treasures",
         "ministry",
         "christian_life",
-        "final_comments"
+        "final_comments",
+        "link"
       ],
       "title": "Normal Meeting Week",
       "type": "object"
@@ -214,12 +216,12 @@
       "additionalProperties": false,
       "description": "A segment with speaker, title, and duration",
       "properties": {
-        "duration": {
-          "pattern": "^\\d+:\\d+$",
-          "type": "string"
-        },
         "title": {
           "minLength": 1,
+          "type": "string"
+        },
+        "duration": {
+          "pattern": "^\\d+:\\d+$",
           "type": "string"
         },
         "who": {
@@ -228,9 +230,9 @@
         }
       },
       "required": [
-        "who",
         "title",
-        "duration"
+        "duration",
+        "who"
       ],
       "type": "object"
     },
@@ -238,20 +240,20 @@
       "additionalProperties": false,
       "description": "A week with no regular meeting (e.g., convention, assembly, special event)",
       "properties": {
-        "bible_reading": {
-          "description": "Bible reading reference",
-          "minLength": 1,
-          "type": "string"
-        },
         "kind": {
           "enum": [
             "specialEvent"
           ],
           "type": "string"
         },
-        "link": {
-          "description": "Optional link to the meeting agenda document",
-          "format": "uri",
+        "week": {
+          "description": "Week date range",
+          "minLength": 1,
+          "type": "string"
+        },
+        "bible_reading": {
+          "description": "Bible reading reference",
+          "minLength": 1,
           "type": "string"
         },
         "no_meeting": {
@@ -266,19 +268,19 @@
           "minLength": 1,
           "type": "string"
         },
-        "week": {
-          "description": "Week date range",
-          "minLength": 1,
+        "link": {
+          "description": "Optional link to the meeting agenda document",
+          "format": "uri",
           "type": "string"
         }
       },
       "required": [
         "kind",
         "week",
-        "link",
         "bible_reading",
         "no_meeting",
-        "reason"
+        "reason",
+        "link"
       ],
       "title": "Special Event Week",
       "type": "object"
@@ -287,6 +289,16 @@
       "additionalProperties": false,
       "description": "A week when an important visitor replaces the congregation study with their speech",
       "properties": {
+        "kind": {
+          "enum": [
+            "visit"
+          ],
+          "type": "string"
+        },
+        "week": {
+          "minLength": 1,
+          "type": "string"
+        },
         "bible_reading": {
           "minLength": 1,
           "type": "string"
@@ -295,77 +307,13 @@
           "minLength": 1,
           "type": "string"
         },
-        "christian_life": {
-          "additionalProperties": false,
-          "properties": {
-            "overseer_speech": {
-              "$ref": "#/definitions/segment",
-              "additionalProperties": false,
-              "description": "Visiting speaker who addresses the congregation",
-              "required": [
-                "name",
-                "title",
-                "duration"
-              ],
-              "type": "object"
-            },
-            "parts": {
-              "items": {
-                "$ref": "#/definitions/segment"
-              },
-              "minItems": 1,
-              "type": "array"
-            }
-          },
-          "required": [
-            "parts",
-            "overseer_speech"
-          ],
-          "type": "object"
-        },
-        "final_comments": {
-          "$ref": "#/definitions/segment",
-          "additionalProperties": false
-        },
-        "initial_comments": {
-          "additionalProperties": false,
-          "properties": {
-            "duration": {
-              "pattern": "^\\d+:\\d+$",
-              "type": "string"
-            },
-            "title": {
-              "minLength": 1,
-              "type": "string"
-            },
-            "who": {
-              "minLength": 1,
-              "type": "string"
-            }
-          },
-          "required": [
-            "title",
-            "who",
-            "duration"
-          ],
-          "type": "object"
-        },
-        "kind": {
-          "enum": [
-            "visit"
-          ],
-          "type": "string"
-        },
-        "link": {
-          "description": "Optional link to the meeting agenda document",
-          "format": "uri",
-          "type": "string"
-        },
-        "ministry": {
+        "songs": {
           "items": {
-            "$ref": "#/definitions/multiPersonSegment"
+            "minLength": 1,
+            "type": "string"
           },
-          "minItems": 1,
+          "maxItems": 3,
+          "minItems": 3,
           "type": "array"
         },
         "prayers": {
@@ -377,27 +325,42 @@
           "minItems": 2,
           "type": "array"
         },
-        "songs": {
-          "items": {
-            "minLength": 1,
-            "type": "string"
+        "initial_comments": {
+          "additionalProperties": false,
+          "properties": {
+            "title": {
+              "minLength": 1,
+              "type": "string"
+            },
+            "duration": {
+              "pattern": "^\\d+:\\d+$",
+              "type": "string",
+              "default": "1:00"
+            },
+            "who": {
+              "minLength": 1,
+              "type": "string"
+            }
           },
-          "maxItems": 3,
-          "minItems": 3,
-          "type": "array"
+          "required": [
+            "title",
+            "duration",
+            "who"
+          ],
+          "type": "object"
         },
         "treasures": {
           "additionalProperties": false,
           "properties": {
-            "bible_reading": {
-              "$ref": "#/definitions/segment",
-              "additionalProperties": false,
-              "type": "object"
-            },
             "speech": {
               "$ref": "#/definitions/segment"
             },
             "spiritual_gems": {
+              "$ref": "#/definitions/segment",
+              "additionalProperties": false,
+              "type": "object"
+            },
+            "bible_reading": {
               "$ref": "#/definitions/segment",
               "additionalProperties": false,
               "type": "object"
@@ -410,24 +373,64 @@
           ],
           "type": "object"
         },
-        "week": {
-          "minLength": 1,
+        "ministry": {
+          "items": {
+            "$ref": "#/definitions/multiPersonSegment"
+          },
+          "minItems": 1,
+          "type": "array"
+        },
+        "christian_life": {
+          "additionalProperties": false,
+          "properties": {
+            "parts": {
+              "items": {
+                "$ref": "#/definitions/segment"
+              },
+              "minItems": 1,
+              "type": "array"
+            },
+            "overseer_speech": {
+              "$ref": "#/definitions/segment",
+              "additionalProperties": false,
+              "description": "Visiting speaker who addresses the congregation",
+              "required": [
+                "name",
+                "title",
+                "duration"
+              ],
+              "type": "object"
+            }
+          },
+          "required": [
+            "parts",
+            "overseer_speech"
+          ],
+          "type": "object"
+        },
+        "final_comments": {
+          "$ref": "#/definitions/segment",
+          "additionalProperties": false
+        },
+        "link": {
+          "description": "Optional link to the meeting agenda document",
+          "format": "uri",
           "type": "string"
         }
       },
       "required": [
         "kind",
         "week",
-        "link",
         "bible_reading",
+        "chairman",
         "songs",
         "prayers",
-        "chairman",
         "initial_comments",
         "treasures",
         "ministry",
         "christian_life",
-        "final_comments"
+        "final_comments",
+        "link"
       ],
       "title": "Visit Week",
       "type": "object"
