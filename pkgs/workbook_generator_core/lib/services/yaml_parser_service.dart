@@ -115,25 +115,25 @@ const _sample = '''
     duration: 3 min
 ''';
 
-final class YamlParserService implements ParserService {
-  const YamlParserService();
+final class const YamlParserService() implements ParserService {
   @override
   FutureResult<List<Map<String, Object?>>, FormatException> fromString(
     String yamlString,
   ) async {
     final yamlStream = await Isolate.run(
-      () => loadYamlStream(yamlString)
-          .map<Result<List<Map<String, Object?>>, FormatException>>((doc) {
-            final value = _toPlain(doc);
-            if (value is! Iterable<Object?>) {
-              return .err(const FormatException('expected list'));
-            }
-            if (value.any((e) => e is! Map<String, Object?>)) {
-              return .err(const FormatException('expected list of maps'));
-            }
+      () =>
+          loadYamlStream(yamlString)
+              .map<Result<List<Map<String, Object?>>, FormatException>>((doc) {
+                final value = _toPlain(doc);
+                if (value is! Iterable<Object?>) {
+                  return .err(const FormatException('expected list'));
+                }
+                if (value.any((e) => e is! Map<String, Object?>)) {
+                  return .err(const FormatException('expected list of maps'));
+                }
 
-            return .ok(value.cast<Map<String, Object?>>().toList());
-          }),
+                return .ok(value.cast<Map<String, Object?>>().toList());
+              }),
     );
 
     final result = <Map<String, Object?>>[];

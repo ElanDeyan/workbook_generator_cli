@@ -22,13 +22,13 @@ void main(List<String> args) async {
   const yamlParser = YamlParserService();
 
   final result = await yamlParser.fromString(
-    File('../../data/schema.yaml').readAsStringSync(),
+    File('../../../jw_workbook_imbui/september_2026_imbui.yaml')
+        .readAsStringSync(),
   );
   if (result.isErr) {
     print('Error parsing YAML: ${result.err}');
   } else {
     final meetingWeek = result.ok!;
-    // print('Successfully parsed meeting week: $meetingWeek');
 
     final parseResult = [
       for (final map in meetingWeek) MeetingWeek.fromMap(map),
@@ -51,17 +51,11 @@ void main(List<String> args) async {
   }
 }
 
-sealed class MeetingWeek implements ShareableText {
-  const MeetingWeek({
-    required this.link,
-    required this.weekRange,
-    required this.bibleReading,
-  });
-
-  final String weekRange;
-  final String bibleReading;
-  final Uri link;
-
+sealed class const MeetingWeek({
+  required final Uri link,
+  required final String weekRange,
+  required final String bibleReading,
+}) implements ShareableText {
   bool get hasMeeting;
 
   MeetingKind get kind => switch (this) {

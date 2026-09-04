@@ -1,8 +1,8 @@
 import 'package:args/command_runner.dart';
 import 'package:workbook_generator_cli/commands/new_runner.dart';
 
-final class MainCommandRunner extends CommandRunner<void> {
-  MainCommandRunner()
+final class MainCommandRunner() extends CommandRunner<void> {
+  this
     : super(
         'jwb',
         "A CLI for generate Jehovah's Witnesses' "

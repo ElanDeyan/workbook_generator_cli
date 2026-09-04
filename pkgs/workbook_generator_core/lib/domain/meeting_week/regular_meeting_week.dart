@@ -1,21 +1,18 @@
 part of 'meeting_week.dart';
 
-final class RegularMeetingWeek
-    extends ProgrammedMeetingWeek<RegularChristianLife> {
-  const RegularMeetingWeek({
-    required super.link,
-    required super.weekRange,
-    required super.bibleReading,
-    required super.songs,
-    required super.prayers,
-    required super.chairman,
-    required super.initialComments,
-    required super.treasuresFromGodsWord,
-    required super.applyYourselfToMinistry,
-    required super.finalComments,
-    required super.christianLife,
-  });
-
+final class const RegularMeetingWeek({
+  required super.link,
+  required super.weekRange,
+  required super.bibleReading,
+  required super.songs,
+  required super.prayers,
+  required super.chairman,
+  required super.initialComments,
+  required super.treasuresFromGodsWord,
+  required super.applyYourselfToMinistry,
+  required super.finalComments,
+  required super.christianLife,
+}) extends ProgrammedMeetingWeek<RegularChristianLife> {
   @override
   bool get hasMeeting => true;
 

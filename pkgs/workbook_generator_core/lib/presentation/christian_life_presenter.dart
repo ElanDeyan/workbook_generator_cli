@@ -5,17 +5,11 @@ import 'package:workbook_generator_core/domain/meeting_week/segments/assignment.
 import 'package:workbook_generator_core/protocols/pdf_presenter.dart';
 import 'package:workbook_generator_core/services/icon_provider.dart';
 
-final class ChristianLifePresenter implements PdfPresenter {
-  ChristianLifePresenter({
-    required this.finalCommentsWidget,
-    required this.midMeetingSong,
-    required this._christianLife,
-  });
-
-  final ChristianLife _christianLife;
-  final String midMeetingSong;
-  final pw.Widget finalCommentsWidget;
-
+final class const ChristianLifePresenter({
+  required final pw.Widget finalCommentsWidget,
+  required final String midMeetingSong,
+  required final ChristianLife _christianLife,
+}) implements PdfPresenter {
   @override
   PdfColor get iconAccentColor => .fromHex('#BF2F14');
 

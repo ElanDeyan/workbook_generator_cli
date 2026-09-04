@@ -1,17 +1,11 @@
 import 'package:dev_utils/result.dart';
 import 'package:workbook_generator_core/domain/meeting_week/segments/assignment.dart';
 
-final class TreasuresFromGodsWord {
-  const TreasuresFromGodsWord({
-    required this.speech,
-    required this.spiritualGems,
-    required this.bibleReading,
-  });
-
-  final SinglePersonAssignment speech;
-  final SinglePersonAssignment spiritualGems;
-  final SinglePersonAssignment bibleReading;
-
+final class const TreasuresFromGodsWord({
+  required final SinglePersonAssignment speech,
+  required final SinglePersonAssignment spiritualGems,
+  required final SinglePersonAssignment bibleReading,
+}) {
   @override
   String toString() {
     return 'TreasuresFromGodsWord(speech: $speech, spiritualGems: $spiritualGems, bibleReading: $bibleReading)';

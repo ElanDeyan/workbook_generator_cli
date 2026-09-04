@@ -5,11 +5,9 @@ import 'package:workbook_generator_core/domain/meeting_week/segments/assignment.
 import 'package:workbook_generator_core/protocols/pdf_presenter.dart';
 import 'package:workbook_generator_core/services/icon_provider.dart';
 
-final class ApplyYourselfToMinistryPresenter implements PdfPresenter {
-  ApplyYourselfToMinistryPresenter({required this._applyYourselfToMinistry});
-
-  final ApplyYourselfToMinistry _applyYourselfToMinistry;
-
+final class const ApplyYourselfToMinistryPresenter({
+  required final ApplyYourselfToMinistry _applyYourselfToMinistry,
+}) implements PdfPresenter {
   @override
   PdfColor get iconAccentColor => .fromHex('#D69000');
 

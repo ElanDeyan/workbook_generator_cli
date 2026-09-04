@@ -3,12 +3,10 @@ import 'dart:collection';
 import 'package:dev_utils/result.dart';
 import 'package:workbook_generator_core/domain/shared/name.dart';
 
-sealed class Assignment {
-  const Assignment({required this.title, required this.duration});
-
-  final String title;
-  final Duration duration;
-
+sealed class const Assignment({
+  required final String title,
+  required final Duration duration,
+}) {
   static Result<Assignment, FormatException> fromMap(
     Map<String, Object?> dartMap,
   ) {
@@ -26,15 +24,11 @@ sealed class Assignment {
   }
 }
 
-final class MultiPersonAssignment extends Assignment {
-  const MultiPersonAssignment({
-    required super.title,
-    required super.duration,
-    required this.names,
-  });
-
-  final UnmodifiableListView<Name> names;
-
+final class const MultiPersonAssignment({
+  required super.title,
+  required super.duration,
+  required final UnmodifiableListView<Name> names,
+}) extends Assignment {
   @override
   String toString() {
     return 'MultiPersonAssignment(title: $title, duration: $duration, names: $names)';
@@ -73,19 +67,13 @@ final class MultiPersonAssignment extends Assignment {
   }
 }
 
-final class SinglePersonAssignment extends Assignment {
-  const SinglePersonAssignment({
-    required super.title,
-    required super.duration,
-    required this.name,
-  });
-
-  factory SinglePersonAssignment.spiritualGems({
-    required Name name,
-    required Duration duration,
-  }) => .new(duration: duration, name: name, title: 'Joias espirituais');
-
-  final Name name;
+final class const SinglePersonAssignment({
+  required super.title,
+  required super.duration,
+  required final Name name,
+}) extends Assignment {
+  factory spiritualGems({required Name name, required Duration duration}) =>
+      .new(duration: duration, name: name, title: 'Joias espirituais');
 
   @override
   String toString() {

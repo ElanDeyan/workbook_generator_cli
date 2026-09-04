@@ -4,11 +4,9 @@ import 'package:workbook_generator_core/domain/meeting_week/treasures.dart';
 import 'package:workbook_generator_core/protocols/pdf_presenter.dart';
 import 'package:workbook_generator_core/services/icon_provider.dart';
 
-final class TreasuresFromGodsWordPresenter implements PdfPresenter {
-  const TreasuresFromGodsWordPresenter({required this._treasures});
-
-  final TreasuresFromGodsWord _treasures;
-
+final class const TreasuresFromGodsWordPresenter({
+  required final TreasuresFromGodsWord _treasures,
+}) implements PdfPresenter {
   @override
   PdfColor get iconAccentColor => .fromHex('#3C7F8B');
 

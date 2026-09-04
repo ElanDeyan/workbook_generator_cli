@@ -1,1 +1,1 @@
-extension type Name(String self) implements Object {}
+extension type const Name(String self) implements Object;

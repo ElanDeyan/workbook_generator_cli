@@ -6,8 +6,8 @@ import 'package:dev_utils/result.dart';
 import 'package:intl/intl.dart';
 import 'package:workbook_generator_cli/utils/prompt_yes_or_no.dart';
 
-final class NewCommand extends Command<void> {
-  NewCommand() {
+final class NewCommand() extends Command<void> {
+  this {
     argParser
       ..addOption(
         _fileOptionName,
@@ -66,9 +66,8 @@ final class NewCommand extends Command<void> {
     var uriAsFilePath = fileUri.toFilePath(windows: isWindows);
 
     if (!uriAsFilePath.endsWith('.yaml')) {
-      uriAsFilePath = Uri.parse(
-        '$uriAsFilePath.yaml',
-      ).toFilePath(windows: isWindows);
+      uriAsFilePath = Uri.parse('$uriAsFilePath.yaml')
+          .toFilePath(windows: isWindows);
     }
 
     final file = File(uriAsFilePath);
@@ -118,7 +117,9 @@ final class NewCommand extends Command<void> {
                   throw StateError('Failed to delete file at $filePath');
                 }
 
-                return file.create(recursive: true).then(_writeInitialFileData);
+                return await file
+                    .create(recursive: true)
+                    .then(_writeInitialFileData);
               },
             );
 
@@ -146,7 +147,7 @@ final class NewCommand extends Command<void> {
   }
 
   Future<File> _writeInitialFileData(File file) async =>
-      file.writeAsString(_defaultFileData);
+      await file.writeAsString(_defaultFileData);
 }
 
 enum NewCommandOkResult { untouched, created, replaced }

@@ -1,8 +1,6 @@
 import 'dart:io';
 
-final class IconProvider {
-  const IconProvider();
-
+final class const IconProvider() {
   static final Directory iconsDirectory = Directory('../../assets/icons/');
 
   File get diamondIcon => .new(

@@ -1,21 +1,18 @@
 part of 'meeting_week.dart';
 
-final class OverseerVisitMeetingWeek
-    extends ProgrammedMeetingWeek<OverseerVisitChristianLife> {
-  OverseerVisitMeetingWeek({
-    required super.weekRange,
-    required super.bibleReading,
-    required super.songs,
-    required super.prayers,
-    required super.chairman,
-    required super.initialComments,
-    required super.treasuresFromGodsWord,
-    required super.applyYourselfToMinistry,
-    required super.christianLife,
-    required super.finalComments,
-    required super.link,
-  });
-
+final class OverseerVisitMeetingWeek({
+  required super.weekRange,
+  required super.bibleReading,
+  required super.songs,
+  required super.prayers,
+  required super.chairman,
+  required super.initialComments,
+  required super.treasuresFromGodsWord,
+  required super.applyYourselfToMinistry,
+  required super.christianLife,
+  required super.finalComments,
+  required super.link,
+}) extends ProgrammedMeetingWeek<OverseerVisitChristianLife> {
   @override
   bool get hasMeeting => true;
 

@@ -3,11 +3,9 @@ import 'dart:collection';
 import 'package:dev_utils/result.dart';
 import 'package:workbook_generator_core/domain/meeting_week/segments/assignment.dart';
 
-final class ApplyYourselfToMinistry {
-  const ApplyYourselfToMinistry({required this.assignments});
-
-  final UnmodifiableListView<MultiPersonAssignment> assignments;
-
+final class const ApplyYourselfToMinistry({
+  required final UnmodifiableListView<MultiPersonAssignment> assignments,
+}) {
   @override
   String toString() {
     return 'ApplyYourselfToMinistry(assignments: $assignments)';

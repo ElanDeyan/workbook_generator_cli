@@ -4,11 +4,9 @@ import 'package:dev_utils/result.dart';
 import 'package:workbook_generator_core/domain/meeting_week/segments/assignment.dart';
 import 'package:workbook_generator_core/domain/shared/name.dart';
 
-sealed class ChristianLife {
-  const ChristianLife({required this.initialParts});
-
-  final UnmodifiableListView<SinglePersonAssignment> initialParts;
-
+sealed class const ChristianLife({
+  required final UnmodifiableListView<SinglePersonAssignment> initialParts,
+}) {
   static Result<ChristianLife, FormatException> fromMap(
     Map<String, Object?> dartMap,
   ) {
@@ -26,19 +24,12 @@ sealed class ChristianLife {
   }
 }
 
-final class CongregationStudy {
-  const CongregationStudy({
-    required this.title,
-    required this.duration,
-    required this.conductor,
-    required this.reader,
-  });
-
-  final String title;
-  final Duration duration;
-  final Name conductor;
-  final Name reader;
-
+final class const CongregationStudy({
+  required final String title,
+  required final Duration duration,
+  required final Name conductor,
+  required final Name reader,
+}) {
   @override
   String toString() {
     return 'CongregationStudy(title: $title, duration: $duration, conductor: $conductor, reader: $reader)';
@@ -86,14 +77,10 @@ final class CongregationStudy {
   }
 }
 
-final class OverseerVisitChristianLife extends ChristianLife {
-  const OverseerVisitChristianLife({
-    required super.initialParts,
-    required this.overseerSpeech,
-  });
-
-  final SinglePersonAssignment overseerSpeech;
-
+final class const OverseerVisitChristianLife({
+  required super.initialParts,
+  required final SinglePersonAssignment overseerSpeech,
+}) extends ChristianLife {
   @override
   String toString() {
     return 'OverseerVisitChristianLife(initialParts: $initialParts, overseerSpeech: $overseerSpeech)';
@@ -146,14 +133,10 @@ final class OverseerVisitChristianLife extends ChristianLife {
   }
 }
 
-final class RegularChristianLife extends ChristianLife {
-  const RegularChristianLife({
-    required super.initialParts,
-    required this.congregationStudy,
-  });
-
-  final CongregationStudy congregationStudy;
-
+final class const RegularChristianLife({
+  required super.initialParts,
+  required final CongregationStudy congregationStudy,
+}) extends ChristianLife {
   @override
   String toString() {
     return 'RegularChristianLife(initialParts: $initialParts, congregationStudy: $congregationStudy)';

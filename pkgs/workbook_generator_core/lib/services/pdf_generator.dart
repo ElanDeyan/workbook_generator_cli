@@ -3,6 +3,7 @@ import 'dart:isolate';
 
 import 'package:cross_file/cross_file.dart';
 import 'package:dev_utils/result.dart';
+import 'package:dev_utils/scope.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:workbook_generator_core/domain/meeting_week/meeting_week.dart';
@@ -16,7 +17,8 @@ Future<void> main(List<String> args) async {
   const yamlParser = YamlParserService();
 
   final result = await yamlParser.fromString(
-    File('../../data/schema.yaml').readAsStringSync(),
+    File('../../../jw_workbook_imbui/september_2026_imbui.yaml')
+        .readAsStringSync(),
   );
 
   if (result.isErr) {
@@ -25,9 +27,10 @@ Future<void> main(List<String> args) async {
 
   final meetingWeeks = result.ok!;
 
-  final parseResult = [
-    for (final map in meetingWeeks) MeetingWeek.fromMap(map),
-  ].whereType<Ok<MeetingWeek, FormatException>>().map((e) => e.value).toSet();
+  final parseResult = [for (final map in meetingWeeks) MeetingWeek.fromMap(map)]
+      .whereType<Ok<MeetingWeek, FormatException>>()
+      .map((e) => e.value)
+      .toSet();
 
   final pdfFile = await generatePdf(parseResult);
 
@@ -41,8 +44,10 @@ Future<XFile> generatePdf(Set<MeetingWeek> meetingWeeks) async {
   final fontFile = File(
     '../../assets/fonts/roboto/Roboto-VariableFont_wdth,wght.ttf',
   );
-  final fontBytes = await fontFile.readAsBytes();
-  final font = pw.Font.ttf(fontBytes.buffer.asByteData());
+  final fontBytes = fontFile.existsSync() ? await fontFile.readAsBytes() : null;
+  final font =
+      fontBytes?.buffer.let((value) => pw.Font.ttf(value.asByteData())) ??
+      .helvetica();
 
   final doc = pw.Document(theme: .withFont(base: font));
 
