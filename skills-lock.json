@@ -1,0 +1,23 @@
+{
+  "version": 1,
+  "skills": {
+    "dart-cognitive-complexity": {
+      "source": "kevmoo/analytica.dart",
+      "sourceType": "github",
+      "skillPath": "skills/dart-cognitive-complexity/SKILL.md",
+      "computedHash": "0b231c9234900a9ccab733a1234890455c5f83efb9229fff9ba4e791d899c073"
+    },
+    "dart-dedupe": {
+      "source": "kevmoo/analytica.dart",
+      "sourceType": "github",
+      "skillPath": "skills/dart-dedupe/SKILL.md",
+      "computedHash": "6342b9fced38c4c582b3ad54c882b2c8caafc7f1faa58f94be42d55aa213f44b"
+    },
+    "dart-undead": {
+      "source": "kevmoo/analytica.dart",
+      "sourceType": "github",
+      "skillPath": "skills/dart-undead/SKILL.md",
+      "computedHash": "eb160fccce33e97c8aefa09244b5a2973f59dfa164a9c570953e1762aad68f91"
+    }
+  }
+}

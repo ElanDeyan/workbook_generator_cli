@@ -10,4 +10,7 @@ workspace:
   - pkgs/workbook_generator_cli
   - pkgs/workbook_generator_core
 dev_dependencies:
+  cognitive_complexity: ^2.0.1
+  dedupe: ^0.1.0
+  undead: ^0.1.1
   very_good_analysis: ^11.0.0

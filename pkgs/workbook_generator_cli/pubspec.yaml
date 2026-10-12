@@ -15,9 +15,7 @@ executables:
 # Add regular dependencies here.
 dependencies:
   args: ^2.7.0
-  dev_utils:
-    git:
-      url: https://github.com/ElanDeyan/dev_utils
+  dey_dev_utils: ^0.1.0-dev.2+3
   intl: ^0.20.2
   workbook_generator_core: ^1.0.0
 

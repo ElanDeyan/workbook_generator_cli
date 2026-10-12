@@ -1,7 +1,7 @@
 import 'dart:isolate';
 
-import 'package:dev_utils/result.dart';
-import 'package:dev_utils/trampoline.dart';
+import 'package:dey_dev_utils/result.dart';
+import 'package:dey_dev_utils/trampoline.dart';
 import 'package:workbook_generator_core/services/i_parser_service.dart';
 import 'package:yaml/yaml.dart';
 

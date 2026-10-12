@@ -1,4 +1,4 @@
-import 'package:dev_utils/result.dart';
+import 'package:dey_dev_utils/result.dart';
 
 enum MeetingKind {
   normal,

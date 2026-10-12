@@ -1,9 +1,9 @@
 import 'dart:io';
 import 'dart:isolate';
+import 'dart:typed_data';
 
-import 'package:cross_file/cross_file.dart';
-import 'package:dev_utils/result.dart';
-import 'package:dev_utils/scope.dart';
+import 'package:dey_dev_utils/result.dart';
+import 'package:dey_dev_utils/scope.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:workbook_generator_core/domain/meeting_week/meeting_week.dart';
@@ -17,7 +17,7 @@ Future<void> main(List<String> args) async {
   const yamlParser = YamlParserService();
 
   final result = await yamlParser.fromString(
-    File('../../../jw_workbook_imbui/september_2026_imbui.yaml')
+    File('../../../jw_workbook_imbui/october_2026_imbui.yaml')
         .readAsStringSync(),
   );
 
@@ -32,15 +32,15 @@ Future<void> main(List<String> args) async {
       .map((e) => e.value)
       .toSet();
 
-  final pdfFile = await generatePdf(parseResult);
+  final pdfBytes = await generatePdf(parseResult);
 
   final file = File('output.pdf')
     ..createSync()
-    ..writeAsBytesSync(await pdfFile.readAsBytes());
+    ..writeAsBytesSync(pdfBytes);
   print('PDF generated: ${file.path}');
 }
 
-Future<XFile> generatePdf(Set<MeetingWeek> meetingWeeks) async {
+Future<Uint8List> generatePdf(Set<MeetingWeek> meetingWeeks) async {
   final fontFile = File(
     '../../assets/fonts/roboto/Roboto-VariableFont_wdth,wght.ttf',
   );
@@ -58,14 +58,7 @@ Future<XFile> generatePdf(Set<MeetingWeek> meetingWeeks) async {
 
   final bytes = await Isolate.run(doc.save);
 
-  final file = XFile.fromData(
-    bytes,
-    name: 'meeting_week.pdf',
-    mimeType: 'application/pdf',
-    length: bytes.length,
-  );
-
-  return file;
+  return bytes;
 }
 
 Future<pw.Page> _buildPage(MeetingWeek meetingWeek) async {

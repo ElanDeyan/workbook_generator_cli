@@ -3,3 +3,8 @@
 .dart_tool/
 data/schema.yaml
 input/
+
+# AI
+.agents
+.claude
+.github/skills

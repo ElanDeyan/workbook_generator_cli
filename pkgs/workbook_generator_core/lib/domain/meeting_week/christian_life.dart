@@ -1,6 +1,6 @@
 import 'dart:collection';
 
-import 'package:dev_utils/result.dart';
+import 'package:dey_dev_utils/result.dart';
 import 'package:workbook_generator_core/domain/meeting_week/segments/assignment.dart';
 import 'package:workbook_generator_core/domain/shared/name.dart';
 
@@ -198,7 +198,7 @@ final class const RegularChristianLife({
       return .ok(
         .new(
           initialParts: UnmodifiableListView(initialPartsResult.ok!),
-          congregationStudy: CongregationStudy(
+          congregationStudy: const CongregationStudy(
             title: 'N/A',
             duration: Duration.zero,
             conductor: Name('N/A'),

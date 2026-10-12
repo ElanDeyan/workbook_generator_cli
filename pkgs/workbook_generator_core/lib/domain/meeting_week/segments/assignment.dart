@@ -1,6 +1,6 @@
 import 'dart:collection';
 
-import 'package:dev_utils/result.dart';
+import 'package:dey_dev_utils/result.dart';
 import 'package:workbook_generator_core/domain/shared/name.dart';
 
 sealed class const Assignment({

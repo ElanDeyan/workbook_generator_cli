@@ -1,8 +1,8 @@
 import 'dart:collection';
 import 'dart:io';
 
-import 'package:dev_utils/result.dart';
-import 'package:dev_utils/scope.dart';
+import 'package:dey_dev_utils/result.dart';
+import 'package:dey_dev_utils/scope.dart';
 import 'package:workbook_generator_core/domain/meeting_week/christian_life.dart';
 import 'package:workbook_generator_core/domain/meeting_week/meeting_kind.dart';
 import 'package:workbook_generator_core/domain/meeting_week/ministry.dart';
@@ -22,7 +22,7 @@ void main(List<String> args) async {
   const yamlParser = YamlParserService();
 
   final result = await yamlParser.fromString(
-    File('../../../jw_workbook_imbui/september_2026_imbui.yaml')
+    File('../../../jw_workbook_imbui/october_2026_imbui.yaml')
         .readAsStringSync(),
   );
   if (result.isErr) {
