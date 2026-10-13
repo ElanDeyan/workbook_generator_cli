@@ -139,7 +139,7 @@ final class const ChristianLifePresenter({
               pw.TextSpan(text: '(${assignment.duration.inMinutes} min)'),
               const pw.TextSpan(text: ' - '),
               switch (assignment) {
-                MultiPersonAssignment(:final names) => pw.TextSpan(
+                MinistryAssignment(:final names) => pw.TextSpan(
                   text: names.join(' e '),
                   style: const .new(fontStyle: .italic),
                 ),

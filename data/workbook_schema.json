@@ -1,7 +1,7 @@
 {
-  "$schema": "http://json-schema.org/draft-04/schema#",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
   "definitions": {
-    "multiPersonSegment": {
+    "ministryAssignment": {
       "additionalProperties": false,
       "description": "A segment with title, duration, and multiple participants",
       "properties": {
@@ -20,13 +20,73 @@
           },
           "minItems": 1,
           "type": "array"
+        },
+        "description": {
+          "description": "Optional description of the ministry part",
+          "type": [
+            "string",
+            "null"
+          ],
+          "default": null
+        },
+        "publication_code": {
+          "description": "Publication to be considered (for example, 'th' or 'lmd')",
+          "type": [
+            "string",
+            "null"
+          ],
+          "default": null
+        },
+        "kind": {
+          "description": "Kind of ministry part",
+          "enum": [
+            "starting_a_conversation",
+            "following_up",
+            "what_would_you_say",
+            "making_disciples",
+            "explaining_your_beliefs",
+            "talk"
+          ],
+          "type": "string"
+        },
+        "is_talk": {
+          "default": false,
+          "description": "Whether this part is a talk",
+          "type": "boolean"
         }
       },
       "required": [
-        "title",
+        "kind",
+        "is_talk",
         "duration",
+        "title",
+        "description",
+        "publication_code",
         "who"
       ],
+      "if": {
+        "properties": {
+          "is_talk": {
+            "const": true
+          }
+        },
+        "required": [
+          "is_talk"
+        ]
+      },
+      "then": {
+        "properties": {
+          "kind": {
+            "enum": [
+              "speech",
+              "explaining_your_beliefs"
+            ]
+          }
+        },
+        "required": [
+          "kind"
+        ]
+      },
       "type": "object"
     },
     "normalWeek": {
@@ -81,14 +141,15 @@
           "description": "Initial comments section",
           "properties": {
             "title": {
+              "default": "Comentários Iniciais",
               "minLength": 1,
               "type": "string"
             },
             "duration": {
               "description": "Duration of the segment (e.g., '1:00')",
+              "default": "1:00",
               "pattern": "^\\d+:\\d+$",
-              "type": "string",
-              "default": "1:00"
+              "type": "string"
             },
             "who": {
               "description": "Person responsible for initial comments",
@@ -108,16 +169,31 @@
           "description": "Spiritual treasures section with multiple subsections",
           "properties": {
             "speech": {
-              "$ref": "#/definitions/segment"
+              "$ref": "#/definitions/segment",
+              "properties": {
+                "duration": {
+                  "default": "10:00"
+                }
+              }
             },
             "spiritual_gems": {
               "$ref": "#/definitions/segment",
-              "additionalProperties": false,
+              "unevaluatedProperties": false,
+              "properties": {
+                "duration": {
+                  "default": "10:00"
+                }
+              },
               "type": "object"
             },
             "bible_reading": {
               "$ref": "#/definitions/segment",
-              "additionalProperties": false,
+              "unevaluatedProperties": false,
+              "properties": {
+                "duration": {
+                  "default": "4:00"
+                }
+              },
               "type": "object"
             }
           },
@@ -131,7 +207,7 @@
         "ministry": {
           "description": "Ministry demonstrations and talks",
           "items": {
-            "$ref": "#/definitions/multiPersonSegment"
+            "$ref": "#/definitions/ministryAssignment"
           },
           "minItems": 1,
           "type": "array"
@@ -186,8 +262,16 @@
         },
         "final_comments": {
           "$ref": "#/definitions/segment",
-          "additionalProperties": false,
-          "description": "Final comments section"
+          "unevaluatedProperties": false,
+          "description": "Final comments section",
+          "properties": {
+            "title": {
+              "default": "Comentários finais"
+            },
+            "duration": {
+              "default": "3:00"
+            }
+          }
         },
         "link": {
           "description": "Optional link to the meeting agenda document",
@@ -329,13 +413,14 @@
           "additionalProperties": false,
           "properties": {
             "title": {
+              "default": "Comentários Iniciais",
               "minLength": 1,
               "type": "string"
             },
             "duration": {
+              "default": "1:00",
               "pattern": "^\\d+:\\d+$",
-              "type": "string",
-              "default": "1:00"
+              "type": "string"
             },
             "who": {
               "minLength": 1,
@@ -353,16 +438,31 @@
           "additionalProperties": false,
           "properties": {
             "speech": {
-              "$ref": "#/definitions/segment"
+              "$ref": "#/definitions/segment",
+              "properties": {
+                "duration": {
+                  "default": "10:00"
+                }
+              }
             },
             "spiritual_gems": {
               "$ref": "#/definitions/segment",
-              "additionalProperties": false,
+              "unevaluatedProperties": false,
+              "properties": {
+                "duration": {
+                  "default": "10:00"
+                }
+              },
               "type": "object"
             },
             "bible_reading": {
               "$ref": "#/definitions/segment",
-              "additionalProperties": false,
+              "unevaluatedProperties": false,
+              "properties": {
+                "duration": {
+                  "default": "4:00"
+                }
+              },
               "type": "object"
             }
           },
@@ -375,7 +475,7 @@
         },
         "ministry": {
           "items": {
-            "$ref": "#/definitions/multiPersonSegment"
+            "$ref": "#/definitions/ministryAssignment"
           },
           "minItems": 1,
           "type": "array"
@@ -410,7 +510,15 @@
         },
         "final_comments": {
           "$ref": "#/definitions/segment",
-          "additionalProperties": false
+          "unevaluatedProperties": false,
+          "properties": {
+            "title": {
+              "default": "Comentários finais"
+            },
+            "duration": {
+              "default": "3:00"
+            }
+          }
         },
         "link": {
           "description": "Optional link to the meeting agenda document",

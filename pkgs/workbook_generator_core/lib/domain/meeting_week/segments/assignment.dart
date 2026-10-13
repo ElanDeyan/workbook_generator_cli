@@ -1,6 +1,8 @@
 import 'dart:collection';
 
 import 'package:dey_dev_utils/result.dart';
+import 'package:dey_dev_utils/scope.dart';
+import 'package:workbook_generator_core/domain/meeting_week/ministry.dart';
 import 'package:workbook_generator_core/domain/shared/name.dart';
 
 sealed class const Assignment({
@@ -11,7 +13,7 @@ sealed class const Assignment({
     Map<String, Object?> dartMap,
   ) {
     if (dartMap.containsKey('names')) {
-      return MultiPersonAssignment.fromMap(dartMap);
+      return MinistryAssignment.fromMap(dartMap);
     } else if (dartMap.containsKey('name')) {
       return SinglePersonAssignment.fromMap(dartMap);
     } else {
@@ -24,23 +26,34 @@ sealed class const Assignment({
   }
 }
 
-final class const MultiPersonAssignment({
+final class const MinistryAssignment({
   required super.title,
   required super.duration,
   required final UnmodifiableListView<Name> names,
+  required final MinistryAssignmentKind kind,
+  required final String? description,
+  required final bool isTalk,
+  required final SchoolPublicationReference? publicationReference,
 }) extends Assignment {
   @override
-  String toString() {
-    return 'MultiPersonAssignment(title: $title, duration: $duration, names: $names)';
-  }
+  String toString() =>
+      'MultiPersonAssignment(title: $title, duration: $duration, '
+      'names: $names , kind: $kind, '
+      'description: $description, '
+      'isTalk: $isTalk, publicationReference: $publicationReference'
+      ')';
 
-  static Result<MultiPersonAssignment, FormatException> fromMap(
+  static Result<MinistryAssignment, FormatException> fromMap(
     Map<String, Object?> dartMap,
   ) {
     if (dartMap case {
       'title': final String title,
       'duration': final String durationString,
       'who': final List<Object?> namesList,
+      'kind': final String kindString,
+      'description': final String? description,
+      'is_talk': final bool isTalk,
+      'publication_code': final String? publicationCode,
     }) {
       final durationParts = durationString.split(':');
       if (durationParts.length != 2) {
@@ -58,7 +71,38 @@ final class const MultiPersonAssignment({
         namesList.whereType<String>().map(Name.new),
       );
 
-      return .ok(.new(title: title, duration: duration, names: names));
+      final kind = MinistryAssignmentKind.fromJsonValue(kindString);
+      if (kind.isErr) {
+        return .err(
+          FormatException('Invalid MinistryAssignmentKind: $kindString'),
+        );
+      }
+
+      final publicationReference = publicationCode?.let(
+        SchoolPublicationReference.fromPublicationCode,
+      );
+
+      if (kind
+          case Ok<MinistryAssignmentKind, FormatException>(value: final kind)
+          when kind != .whatWouldYouSay && publicationReference?.ok == null) {
+        return .err(
+          FormatException(
+            'Publication code is required for assignment kind: $kindString',
+          ),
+        );
+      }
+
+      return .ok(
+        .new(
+          title: title,
+          duration: duration,
+          names: names,
+          isTalk: isTalk,
+          kind: kind.unwrap(),
+          description: description,
+          publicationReference: publicationReference?.unwrapOrNull(),
+        ),
+      );
     } else {
       return .err(
         const .new('Map does not contain required keys or has invalid types.'),
