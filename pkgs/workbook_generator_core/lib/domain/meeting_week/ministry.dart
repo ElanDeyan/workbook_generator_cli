@@ -1,7 +1,7 @@
 import 'dart:collection';
 
 import 'package:dey_dev_utils/result.dart';
-import 'package:workbook_generator_core/domain/meeting_week/segments/assignment.dart';
+import 'package:workbook_generator_core/domain/meeting_week/assignments/assignment.dart';
 
 enum MinistryAssignmentKind({required final String jsonValue}) {
   startingAConversation(jsonValue: 'starting_a_conversation'),

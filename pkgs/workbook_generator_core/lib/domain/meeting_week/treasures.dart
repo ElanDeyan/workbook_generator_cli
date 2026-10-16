@@ -1,10 +1,10 @@
 import 'package:dey_dev_utils/result.dart';
-import 'package:workbook_generator_core/domain/meeting_week/segments/assignment.dart';
+import 'package:workbook_generator_core/domain/meeting_week/assignments/assignment.dart';
 
 final class const TreasuresFromGodsWord({
   required final SinglePersonAssignment speech,
   required final SinglePersonAssignment spiritualGems,
-  required final SinglePersonAssignment bibleReading,
+  required final BibleReadingAssignment bibleReading,
 }) {
   @override
   String toString() {
@@ -23,34 +23,32 @@ final class const TreasuresFromGodsWord({
       final spiritualGemsResult = SinglePersonAssignment.fromMap(
         spiritualGemsMap,
       );
-      final bibleReadingResult = SinglePersonAssignment.fromMap(
+      final bibleReadingResult = BibleReadingAssignment.fromMap(
         bibleReadingMap,
       );
 
       if (speechResult.isErr) {
         return .err(
-          FormatException(
-            'Error parsing speech assignment: ${speechResult.err}',
-          ),
+          .new('Error parsing speech assignment: ${speechResult.err}'),
         );
       }
       if (spiritualGemsResult.isErr) {
         return .err(
-          FormatException(
+          .new(
             'Error parsing spiritual gems assignment: ${spiritualGemsResult.err}',
           ),
         );
       }
       if (bibleReadingResult.isErr) {
         return .err(
-          FormatException(
+          .new(
             'Error parsing Bible reading assignment: ${bibleReadingResult.err}',
           ),
         );
       }
 
       return .ok(
-        TreasuresFromGodsWord(
+        .new(
           speech: speechResult.ok!,
           spiritualGems: spiritualGemsResult.ok!,
           bibleReading: bibleReadingResult.ok!,

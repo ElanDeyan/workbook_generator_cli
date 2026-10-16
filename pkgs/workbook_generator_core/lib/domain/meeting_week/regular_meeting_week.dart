@@ -64,7 +64,7 @@ final class const RegularMeetingWeek({
                 '(${treasuresFromGodsWord.bibleReading.duration.inMinutes} min)'
             .applyBoldBy(richTextKind);
 
-    final bibleReadingName = '${treasuresFromGodsWord.bibleReading.name}'
+    final bibleReadingName = '${treasuresFromGodsWord.bibleReading.reader}'
         .applyItalicBy(richTextKind);
 
     buffer

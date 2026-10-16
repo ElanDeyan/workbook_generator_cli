@@ -6,7 +6,7 @@ import 'package:dey_dev_utils/scope.dart';
 import 'package:workbook_generator_core/domain/meeting_week/christian_life.dart';
 import 'package:workbook_generator_core/domain/meeting_week/meeting_kind.dart';
 import 'package:workbook_generator_core/domain/meeting_week/ministry.dart';
-import 'package:workbook_generator_core/domain/meeting_week/segments/assignment.dart';
+import 'package:workbook_generator_core/domain/meeting_week/assignments/assignment.dart';
 import 'package:workbook_generator_core/domain/meeting_week/treasures.dart';
 import 'package:workbook_generator_core/domain/shared/name.dart';
 import 'package:workbook_generator_core/protocols/shareable_text.dart';

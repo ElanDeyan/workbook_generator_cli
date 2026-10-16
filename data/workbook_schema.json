@@ -89,6 +89,38 @@
       },
       "type": "object"
     },
+    "bibleReadingAssignment": {
+      "additionalProperties": false,
+      "description": "A segment with title, duration, and a single reader",
+      "properties": {
+        "title": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "duration": {
+          "pattern": "^\\d+:\\d+$",
+          "type": "string"
+        },
+        "reader": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "publication_code": {
+          "description": "Publication to be considered (for example, 'th' or 'lmd')",
+          "type": [
+            "string",
+            "null"
+          ],
+          "default": "th"
+        }
+      },
+      "required": [
+        "duration",
+        "title",
+        "reader"
+      ],
+      "type": "object"
+    },
     "normalWeek": {
       "additionalProperties": false,
       "description": "A regular week with full meeting agenda",

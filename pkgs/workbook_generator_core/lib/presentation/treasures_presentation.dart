@@ -89,7 +89,7 @@ final class const TreasuresFromGodsWordPresenter({
           pw.TextSpan(text: '(${bibleReading.duration.inMinutes} min)'),
           const pw.TextSpan(text: ' - '),
           pw.TextSpan(
-            text: '${bibleReading.name}',
+            text: '${bibleReading.reader}',
             style: const .new(fontStyle: .italic),
           ),
         ],

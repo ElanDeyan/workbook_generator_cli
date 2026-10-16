@@ -4,6 +4,7 @@ import 'package:dey_dev_utils/result.dart';
 import 'package:dey_dev_utils/scope.dart';
 import 'package:workbook_generator_core/domain/meeting_week/ministry.dart';
 import 'package:workbook_generator_core/domain/shared/name.dart';
+import 'package:workbook_generator_core/protocols/school_assignable.dart';
 
 sealed class const Assignment({
   required final String title,
@@ -33,14 +34,15 @@ final class const MinistryAssignment({
   required final MinistryAssignmentKind kind,
   required final String? description,
   required final bool isTalk,
-  required final SchoolPublicationReference? publicationReference,
-}) extends Assignment {
+  @override
+  required final SchoolPublicationReference? schoolPublicationReference,
+}) extends Assignment implements SchoolAssignable {
   @override
   String toString() =>
       'MultiPersonAssignment(title: $title, duration: $duration, '
       'names: $names , kind: $kind, '
       'description: $description, '
-      'isTalk: $isTalk, publicationReference: $publicationReference'
+      'isTalk: $isTalk, schoolPublicationReference: $schoolPublicationReference'
       ')';
 
   static Result<MinistryAssignment, FormatException> fromMap(
@@ -100,7 +102,7 @@ final class const MinistryAssignment({
           isTalk: isTalk,
           kind: kind.unwrap(),
           description: description,
-          publicationReference: publicationReference?.unwrapOrNull(),
+          schoolPublicationReference: publicationReference?.unwrapOrNull(),
         ),
       );
     } else {
@@ -108,6 +110,69 @@ final class const MinistryAssignment({
         const .new('Map does not contain required keys or has invalid types.'),
       );
     }
+  }
+}
+
+final class const BibleReadingAssignment({
+  required super.title,
+  required super.duration,
+  required final Name reader,
+  @override
+  required final SchoolPublicationReference? schoolPublicationReference,
+}) extends Assignment implements SchoolAssignable {
+  @override
+  String toString() {
+    return 'BibleReadingAssignment(title: $title, duration: $duration, '
+        'reader: $reader, schoolPublicationReference: $schoolPublicationReference)';
+  }
+
+  static Result<BibleReadingAssignment, FormatException> fromMap(
+    Map<String, Object?> dartMap,
+  ) {
+    if (dartMap case {
+      'title': final String title,
+      'duration': final String durationString,
+      'reader': final String readerName,
+      'publication_code': final String? publicationCode,
+    }) {
+      final durationParts = durationString.split(':');
+      if (durationParts.length != 2) {
+        return .err(const .new('Duration must be in the format "mm:ss".'));
+      }
+
+      final minutes = int.tryParse(durationParts[0]);
+      final seconds = int.tryParse(durationParts[1]);
+      if (minutes == null || seconds == null) {
+        return .err(const .new('Duration must contain valid integers.'));
+      }
+
+      final duration = Duration(minutes: minutes, seconds: seconds);
+      final reader = Name(readerName);
+
+      final publicationReference = publicationCode?.let(
+        SchoolPublicationReference.fromPublicationCode,
+      );
+      if (publicationReference == null || publicationReference.isErr) {
+        return .err(
+          .new('Invalid SchoolPublicationReference: $publicationCode'),
+        );
+      }
+
+      return .ok(
+        .new(
+          title: title,
+          duration: duration,
+          reader: reader,
+          schoolPublicationReference: publicationReference.ok,
+        ),
+      );
+    }
+
+    return .err(
+      const .new(
+        'Map does not contain required keys for a BibleReadingAssignment.',
+      ),
+    );
   }
 }
 

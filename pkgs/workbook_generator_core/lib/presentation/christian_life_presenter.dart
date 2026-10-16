@@ -1,7 +1,7 @@
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
+import 'package:workbook_generator_core/domain/meeting_week/assignments/assignment.dart';
 import 'package:workbook_generator_core/domain/meeting_week/christian_life.dart';
-import 'package:workbook_generator_core/domain/meeting_week/segments/assignment.dart';
 import 'package:workbook_generator_core/protocols/pdf_presenter.dart';
 import 'package:workbook_generator_core/services/icon_provider.dart';
 
@@ -141,6 +141,10 @@ final class const ChristianLifePresenter({
               switch (assignment) {
                 MinistryAssignment(:final names) => pw.TextSpan(
                   text: names.join(' e '),
+                  style: const .new(fontStyle: .italic),
+                ),
+                BibleReadingAssignment(:final reader) => pw.TextSpan(
+                  text: reader.self,
                   style: const .new(fontStyle: .italic),
                 ),
                 SinglePersonAssignment(:final name) => pw.TextSpan(
