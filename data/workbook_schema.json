@@ -78,7 +78,7 @@
         "properties": {
           "kind": {
             "enum": [
-              "speech",
+              "talk",
               "explaining_your_beliefs"
             ]
           }
