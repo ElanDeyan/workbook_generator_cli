@@ -219,7 +219,7 @@
               "type": "object"
             },
             "bible_reading": {
-              "$ref": "#/definitions/segment",
+              "$ref": "#/definitions/bibleReadingAssignment",
               "unevaluatedProperties": false,
               "properties": {
                 "duration": {
@@ -488,7 +488,7 @@
               "type": "object"
             },
             "bible_reading": {
-              "$ref": "#/definitions/segment",
+              "$ref": "#/definitions/bibleReadingAssignment",
               "unevaluatedProperties": false,
               "properties": {
                 "duration": {
