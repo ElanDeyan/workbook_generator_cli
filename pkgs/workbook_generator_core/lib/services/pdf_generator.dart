@@ -1,58 +1,33 @@
-import 'dart:io';
 import 'dart:isolate';
 import 'dart:typed_data';
 
-import 'package:dey_dev_utils/result.dart';
-import 'package:dey_dev_utils/scope.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:workbook_generator_core/domain/meeting_week/meeting_week.dart';
 import 'package:workbook_generator_core/presentation/apply_yourself_to_ministry_presenter.dart';
 import 'package:workbook_generator_core/presentation/christian_life_presenter.dart';
 import 'package:workbook_generator_core/presentation/treasures_presentation.dart';
-import 'package:workbook_generator_core/services/icon_provider.dart';
-import 'package:workbook_generator_core/services/yaml_parser_service.dart';
+import 'package:workbook_generator_core/protocols/icon_provider.dart';
 
-Future<void> main(List<String> args) async {
-  const yamlParser = YamlParserService();
-
-  final result = await yamlParser.fromString(
-    File('../../../jw_workbook_imbui/october_2026_imbui.yaml')
-        .readAsStringSync(),
-  );
-
-  if (result.isErr) {
-    throw Exception('Failed to parse YAML: ${result.err}');
-  }
-
-  final meetingWeeks = result.ok!;
-
-  final parseResult = [for (final map in meetingWeeks) MeetingWeek.fromMap(map)]
-      .whereType<Ok<MeetingWeek, FormatException>>()
-      .map((e) => e.value)
-      .toSet();
-
-  final pdfBytes = await generatePdf(parseResult);
-
-  final file = File('output.pdf')
-    ..createSync()
-    ..writeAsBytesSync(pdfBytes);
-  print('PDF generated: ${file.path}');
+extension type FontFileBytes(Uint8List bytes) {
+  pw.Font toPdfFont() => pw.Font.ttf(bytes.buffer.asByteData());
 }
 
-Future<Uint8List> generatePdf(Set<MeetingWeek> meetingWeeks) async {
-  final fontFile = File(
-    '../../assets/fonts/roboto/Roboto-VariableFont_wdth,wght.ttf',
-  );
-  final fontBytes = fontFile.existsSync() ? await fontFile.readAsBytes() : null;
-  final font =
-      fontBytes?.buffer.let((value) => pw.Font.ttf(value.asByteData())) ??
-      .helvetica();
+Future<Uint8List> generatePdf({
+  required Set<MeetingWeek> meetingWeeks,
+  required IconProvider iconProvider,
+  FontFileBytes? fontFileBytes,
+}) async {
+  final font = fontFileBytes?.toPdfFont() ?? pw.Font.helvetica();
 
   final doc = pw.Document(theme: .withFont(base: font));
 
   for (final meetingWeek in meetingWeeks) {
-    final page = await _buildPage(meetingWeek);
+    final page = await _buildPage(
+      meetingWeek: meetingWeek,
+      iconProvider: iconProvider,
+      fontFileBytes: fontFileBytes,
+    );
     doc.addPage(page);
   }
 
@@ -61,8 +36,11 @@ Future<Uint8List> generatePdf(Set<MeetingWeek> meetingWeeks) async {
   return bytes;
 }
 
-Future<pw.Page> _buildPage(MeetingWeek meetingWeek) async {
-  const iconProvider = IconProvider();
+Future<pw.Page> _buildPage({
+  required MeetingWeek meetingWeek,
+  required IconProvider iconProvider,
+  FontFileBytes? fontFileBytes,
+}) async {
   late final musicNoteSvgImage = pw.SvgImage(
     svg: iconProvider.musicNoteIcon.readAsStringSync(),
     colorFilter: PdfColors.black,
@@ -252,11 +230,20 @@ Future<pw.Page> _buildPage(MeetingWeek meetingWeek) async {
               pw.SizedBox(height: 8),
               chairmanAndInitialCommentsRender,
               pw.SizedBox(height: 8),
-              treasuresPresenter.toPdfWidget(),
+              treasuresPresenter.toPdfWidget(
+                iconProvider: iconProvider,
+                fontFileBytes: fontFileBytes,
+              ),
               pw.SizedBox(height: 8),
-              applyYourselfToMinistryPresenter.toPdfWidget(),
+              applyYourselfToMinistryPresenter.toPdfWidget(
+                iconProvider: iconProvider,
+                fontFileBytes: fontFileBytes,
+              ),
               pw.SizedBox(height: 8),
-              christianLifePresenter.toPdfWidget(),
+              christianLifePresenter.toPdfWidget(
+                iconProvider: iconProvider,
+                fontFileBytes: fontFileBytes,
+              ),
               pw.SizedBox(height: 8),
               lastSongAndPrayer,
             ],

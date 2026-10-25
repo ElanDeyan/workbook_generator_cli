@@ -1,8 +1,9 @@
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:workbook_generator_core/domain/meeting_week/treasures.dart';
+import 'package:workbook_generator_core/protocols/icon_provider.dart';
 import 'package:workbook_generator_core/protocols/pdf_presenter.dart';
-import 'package:workbook_generator_core/services/icon_provider.dart';
+import 'package:workbook_generator_core/services/pdf_generator.dart';
 
 final class const TreasuresFromGodsWordPresenter({
   required final TreasuresFromGodsWord _treasures,
@@ -14,9 +15,10 @@ final class const TreasuresFromGodsWordPresenter({
   PdfColor get textAccentColor => .fromHex('#2A6B77');
 
   @override
-  pw.Widget toPdfWidget() {
-    const iconProvider = IconProvider();
-
+  pw.Widget toPdfWidget({
+    required IconProvider iconProvider,
+    FontFileBytes? fontFileBytes,
+  }) {
     final sectionTitle = pw.Row(
       children: [
         pw.SizedBox.square(

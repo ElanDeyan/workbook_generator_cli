@@ -9,6 +9,8 @@ environment:
 workspace:
   - pkgs/workbook_generator_cli
   - pkgs/workbook_generator_core
+  - pkgs/shared_assets
+
 dev_dependencies:
   cognitive_complexity: ^2.0.1
   dedupe: ^0.1.0

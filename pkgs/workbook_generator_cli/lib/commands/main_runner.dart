@@ -1,4 +1,5 @@
 import 'package:args/command_runner.dart';
+import 'package:workbook_generator_cli/commands/generate_runner.dart';
 import 'package:workbook_generator_cli/commands/new_runner.dart';
 
 final class MainCommandRunner() extends CommandRunner<void> {
@@ -9,5 +10,6 @@ final class MainCommandRunner() extends CommandRunner<void> {
             'meeting workbook from a .yaml source file.',
       ) {
     addCommand(NewCommand());
+    addCommand(GenerateCommand());
   }
 }

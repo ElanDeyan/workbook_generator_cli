@@ -1,0 +1,80 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/ElanDeyan/workbook_generator_cli/main/data/workbook_schema.json
+
+- kind: specialEvent
+  week: 2-8 de novembro
+  bible_reading: JEREMIAS 49-50
+  no_meeting: true
+  reason: Semana da Assembleia de Circuito com o Superintendente de Circuito "Feliz É Aquele Que Confia em Jeová"
+  link: https://www.jw.org/finder?wtlocale=T&pub=ca-copgm27&srcid=share
+
+- kind: normal
+  week: 9-15 de novembro
+  bible_reading: JEREMIAS 51-52
+  chairman: João Vitor
+  songs:
+    - Cântico 98
+    - Cântico 10
+    - Cântico 150
+  prayers:
+    - João Vitor
+    - Joel Lima
+  initial_comments:
+    title: Comentários Iniciais
+    duration: 1:00
+    who: João Vitor
+  treasures:
+    speech:
+      title: 1. Não siga o exemplo de Zedequias
+      duration: 10:00
+      who: Deyan Almeida
+    spiritual_gems:
+      title: 2. Joias Espirituais
+      duration: 10:00
+      who: Elizeu Pereira
+    bible_reading:
+      title: 3. Leitura da Bíblia
+      duration: 4:00
+      reader: Luan Ribeiro
+      publication_code: th
+  ministry:
+    - title: 4. Iniciando Conversas
+      duration: 3:00
+      who:
+        - Edmilson Alves
+        - Waldeck Júnior
+      description: DE CASA EM CASA. Ofereça um estudo bíblico de maneira direta. (lmd lição 3 ponto 3)
+      publication_code: lmd
+      kind: starting_a_conversation
+      is_talk: false
+    - title: 5. Iniciando Conversas
+      duration: 4:00
+      who:
+        - Jossefa Manheia
+        - João Felipe
+      description: DE CASA EM CASA. O morador não concorda com a nossa crença de que Jesus é o Filho de Deus. (lmd lição 3 ponto 4)
+      publication_code: lmd
+      kind: starting_a_conversation
+      is_talk: false
+    - title: 6. Discurso
+      duration: 5:00
+      who:
+        - Juvenal Júnior
+      description: "lmd apêndice A ponto 21 — Tema: O Reino de Deus é um governo de verdade lá no céu. (th lição 7)"
+      publication_code: th
+      kind: talk
+      is_talk: true
+  christian_life:
+    parts:
+      - title: 7. Nossos donativos dão glória ao belo nome de Jeová
+        duration: 15:00
+        who: José Clóvis
+    congregation_study:
+      title: 8. Estudo bíblico de congregação
+      duration: 30:00
+      conductor: Jorge Alexandre
+      reader: Caio Vitor
+  final_comments:
+    title: Comentários finais
+    duration: 3:00
+    who: João Vitor
+  link: https://www.jw.org/finder?wtlocale=T&docid=202026402&srcid=share

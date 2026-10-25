@@ -123,7 +123,8 @@ final class const BibleReadingAssignment({
   @override
   String toString() {
     return 'BibleReadingAssignment(title: $title, duration: $duration, '
-        'reader: $reader, schoolPublicationReference: $schoolPublicationReference)';
+        'reader: $reader, '
+        'schoolPublicationReference: $schoolPublicationReference)';
   }
 
   static Result<BibleReadingAssignment, FormatException> fromMap(
@@ -186,7 +187,8 @@ final class const SinglePersonAssignment({
 
   @override
   String toString() {
-    return 'SinglePersonAssignment(name: $name, title: $title, duration: $duration)';
+    return 'SinglePersonAssignment(name: $name, title: $title, '
+        'duration: $duration)';
   }
 
   static Result<SinglePersonAssignment, FormatException> fromMap(

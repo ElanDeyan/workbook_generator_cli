@@ -78,8 +78,8 @@
           },
           {
             "name": "dart-use-pattern-matching",
-            "installedAt": "2026-10-02T02:08:06.311735Z",
-            "contentHash": "ZJtoILijhGMCyjoli+gvkw==",
+            "installedAt": "2026-10-24T01:23:06.735397Z",
+            "contentHash": "gFB8nFl9q8HMcIKJGZlcHQ==",
             "path": "skills/dart-use-pattern-matching"
           },
           {
@@ -136,91 +136,91 @@
         "skills": [
           {
             "name": "dart-add-unit-test",
-            "installedAt": "2026-10-12T15:26:13.334025Z",
+            "installedAt": "2026-10-24T01:23:06.781683Z",
             "contentHash": "Aplmmm6QJPTsjefJdNBNRQ==",
             "path": "skills/dart-add-unit-test"
           },
           {
             "name": "dart-build-cli-app",
-            "installedAt": "2026-10-12T15:26:13.349352Z",
+            "installedAt": "2026-10-24T01:23:06.800747Z",
             "contentHash": "FoxxlCre6T3s/aqWBYkHTA==",
             "path": "skills/dart-build-cli-app"
           },
           {
             "name": "dart-collect-coverage",
-            "installedAt": "2026-10-12T15:26:13.356334Z",
+            "installedAt": "2026-10-24T01:23:06.804536Z",
             "contentHash": "QR7wBfNWCtWxnIjzgs4Otw==",
             "path": "skills/dart-collect-coverage"
           },
           {
             "name": "dart-fix-runtime-errors",
-            "installedAt": "2026-10-12T15:26:13.367231Z",
+            "installedAt": "2026-10-24T01:23:06.808759Z",
             "contentHash": "mvtrbfhquEVC5sbrsSvYrw==",
             "path": "skills/dart-fix-runtime-errors"
           },
           {
             "name": "dart-generate-test-mocks",
-            "installedAt": "2026-10-12T15:26:13.374717Z",
+            "installedAt": "2026-10-24T01:23:06.813284Z",
             "contentHash": "Rcuvyi6gSTPgZkF8OLAr2Q==",
             "path": "skills/dart-generate-test-mocks"
           },
           {
             "name": "dart-migrate-to-checks-package",
-            "installedAt": "2026-10-12T15:26:13.381150Z",
+            "installedAt": "2026-10-24T01:23:06.817010Z",
             "contentHash": "DVd+CqcsMzEV9Sv/mIg9uA==",
             "path": "skills/dart-migrate-to-checks-package"
           },
           {
             "name": "dart-resolve-package-conflicts",
-            "installedAt": "2026-10-12T15:26:13.385142Z",
+            "installedAt": "2026-10-24T01:23:06.821230Z",
             "contentHash": "zmYeU23aVEM+T8FymHG8RA==",
             "path": "skills/dart-resolve-package-conflicts"
           },
           {
             "name": "dart-run-static-analysis",
-            "installedAt": "2026-10-12T15:26:13.388978Z",
+            "installedAt": "2026-10-24T01:23:06.824495Z",
             "contentHash": "hZzbzqH54GTiEpT2e9VdTA==",
             "path": "skills/dart-run-static-analysis"
           },
           {
             "name": "dart-setup-ffi-assets",
-            "installedAt": "2026-10-12T15:26:13.393435Z",
+            "installedAt": "2026-10-24T01:23:06.828182Z",
             "contentHash": "Zke8iqjBrPSF/Dp2Urpwew==",
             "path": "skills/dart-setup-ffi-assets"
           },
           {
             "name": "dart-use-doc-examples",
-            "installedAt": "2026-10-12T15:26:13.397727Z",
+            "installedAt": "2026-10-24T01:23:06.831395Z",
             "contentHash": "5zNVdv4NmIJAaRQtnZRJOw==",
             "path": "skills/dart-use-doc-examples"
           },
           {
             "name": "dart-use-ffigen",
-            "installedAt": "2026-10-12T15:26:13.402542Z",
+            "installedAt": "2026-10-24T01:23:06.835462Z",
             "contentHash": "UQ6YAj7dOM32H3ocwGTPuw==",
             "path": "skills/dart-use-ffigen"
           },
           {
             "name": "dart-use-path-package",
-            "installedAt": "2026-10-12T15:26:13.411190Z",
+            "installedAt": "2026-10-24T01:23:06.841730Z",
             "contentHash": "giIdR5YpG31pEUdOhmOKZg==",
             "path": "skills/dart-use-path-package"
           },
           {
             "name": "dart-use-pattern-matching",
-            "installedAt": "2026-10-12T15:26:13.418347Z",
-            "contentHash": "wINw91wGerJ15pjLNWzYVQ==",
+            "installedAt": "2026-10-24T01:23:06.846818Z",
+            "contentHash": "qUD0RVjXhVvDL04Kro4X9A==",
             "path": "skills/dart-use-pattern-matching"
           },
           {
             "name": "dart-use-primary-constructors",
-            "installedAt": "2026-10-12T15:26:13.423633Z",
+            "installedAt": "2026-10-24T01:23:06.850028Z",
             "contentHash": "4t8jDo3C3dApbSb23cQW6Q==",
             "path": "skills/dart-use-primary-constructors"
           },
           {
             "name": "dart-write-documentation",
-            "installedAt": "2026-10-12T15:26:13.429429Z",
+            "installedAt": "2026-10-24T01:23:06.853414Z",
             "contentHash": "89JhaCZ41rhfqHTdJ4zr0g==",
             "path": "skills/dart-write-documentation"
           }
@@ -230,31 +230,31 @@
         "skills": [
           {
             "name": "dey-dev-utils-scope-methods-and-function",
-            "installedAt": "2026-10-12T15:26:13.289888Z",
+            "installedAt": "2026-10-24T01:23:06.742553Z",
             "contentHash": "4BYKDP9jP5ZkrvsWpEoacg==",
             "path": "skills/dey-dev-utils-scope-methods-and-function"
           },
           {
             "name": "dey-dev-utils-trampoline",
-            "installedAt": "2026-10-12T15:26:13.294361Z",
+            "installedAt": "2026-10-24T01:23:06.746697Z",
             "contentHash": "xMrL1/0UCdriz9HhnDS4PA==",
             "path": "skills/dey-dev-utils-trampoline"
           },
           {
             "name": "dey-dev-utils-type-safe-comparison",
-            "installedAt": "2026-10-12T15:26:13.301136Z",
+            "installedAt": "2026-10-24T01:23:06.749828Z",
             "contentHash": "D2MSZfwbjCNN+2yHnsngaA==",
             "path": "skills/dey-dev-utils-type-safe-comparison"
           },
           {
             "name": "dey-dev-utils-result-type",
-            "installedAt": "2026-10-12T15:26:13.305062Z",
+            "installedAt": "2026-10-24T01:23:06.753224Z",
             "contentHash": "xdhJn4YuIurbRxfYI3X3Mg==",
             "path": "skills/dey-dev-utils-result-type"
           },
           {
             "name": "dey-dev-utils-spec-pattern",
-            "installedAt": "2026-10-12T15:26:13.311456Z",
+            "installedAt": "2026-10-24T01:23:06.757567Z",
             "contentHash": "CMtq02AjfXUXxDWCvHBmvQ==",
             "path": "skills/dey-dev-utils-spec-pattern"
           }
