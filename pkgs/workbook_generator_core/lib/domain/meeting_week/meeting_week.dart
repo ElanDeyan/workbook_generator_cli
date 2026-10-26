@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:dey_dev_utils/result.dart';
 import 'package:dey_dev_utils/scope.dart';
+import 'package:shared_assets/shared_assets.dart';
 import 'package:workbook_generator_core/domain/meeting_week/assignments/assignment.dart';
 import 'package:workbook_generator_core/domain/meeting_week/christian_life.dart';
 import 'package:workbook_generator_core/domain/meeting_week/meeting_kind.dart';
@@ -10,6 +11,7 @@ import 'package:workbook_generator_core/domain/meeting_week/ministry.dart';
 import 'package:workbook_generator_core/domain/meeting_week/treasures.dart';
 import 'package:workbook_generator_core/domain/shared/name.dart';
 import 'package:workbook_generator_core/protocols/shareable_text.dart';
+import 'package:workbook_generator_core/services/pdf_generator.dart';
 import 'package:workbook_generator_core/services/yaml_parser_service.dart';
 import 'package:workbook_generator_core/utils/rich_text_utils.dart';
 
@@ -22,7 +24,7 @@ void main(List<String> args) async {
   const yamlParser = YamlParserService();
 
   final result = await yamlParser.fromString(
-    File('../../../jw_workbook_imbui/october_2026_imbui.yaml')
+    File('../workbook_generator_cli/sample/november_2026_imbui.yaml')
         .readAsStringSync(),
   );
   if (result.isErr) {
@@ -34,7 +36,8 @@ void main(List<String> args) async {
       for (final map in meetingWeek) MeetingWeek.fromMap(map),
     ];
 
-    final file = File('output.txt')..createSync();
+    final txtFile = File('output.txt')..createSync();
+    final pdfFile = File('output.pdf')..createSync();
     final resultBuffer = StringBuffer();
 
     for (final meetingWeekResult in parseResult) {
@@ -47,7 +50,15 @@ void main(List<String> args) async {
       }
     }
 
-    file.writeAsStringSync(resultBuffer.toString());
+    txtFile.writeAsStringSync(resultBuffer.toString());
+
+    final assets = await SharedAssets.load();
+
+    final pdf = await generatePdf(
+      meetingWeeks: parseResult.map((e) => e.ok).nonNulls.toSet(),
+      iconProvider: assets,
+    );
+    pdfFile.writeAsBytesSync(pdf);
   }
 }
 
