@@ -10,6 +10,7 @@ import 'package:workbook_generator_core/domain/meeting_week/meeting_kind.dart';
 import 'package:workbook_generator_core/domain/meeting_week/ministry.dart';
 import 'package:workbook_generator_core/domain/meeting_week/treasures.dart';
 import 'package:workbook_generator_core/domain/shared/name.dart';
+import 'package:workbook_generator_core/protocols/assigns.dart';
 import 'package:workbook_generator_core/protocols/shareable_text.dart';
 import 'package:workbook_generator_core/services/pdf_generator.dart';
 import 'package:workbook_generator_core/services/yaml_parser_service.dart';
@@ -66,7 +67,7 @@ sealed class const MeetingWeek({
   required final Uri link,
   required final String weekRange,
   required final String bibleReading,
-}) implements ShareableText {
+}) implements ShareableText, Assigns {
   bool get hasMeeting;
 
   MeetingKind get kind => switch (this) {

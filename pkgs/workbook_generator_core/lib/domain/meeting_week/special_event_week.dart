@@ -10,6 +10,9 @@ final class const SpecialEventWeek({
   bool get hasMeeting => false;
 
   @override
+  List<Assignment> get assignments => [];
+
+  @override
   String toShareableText({RichTextKind richTextKind = .none}) {
     final buffer = StringBuffer()
       ..writeln('Semana de $weekRange'.applyBoldBy(richTextKind))

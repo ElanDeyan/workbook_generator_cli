@@ -17,6 +17,12 @@ final class const RegularMeetingWeek({
   bool get hasMeeting => true;
 
   @override
+  List<Assignment> get assignments => [
+    treasuresFromGodsWord.bibleReading,
+    ...applyYourselfToMinistry.assignments,
+  ];
+
+  @override
   String toShareableText({RichTextKind richTextKind = .none}) {
     final buffer = StringBuffer()
       ..writeln('Semana de $weekRange'.applyBoldBy(richTextKind))
