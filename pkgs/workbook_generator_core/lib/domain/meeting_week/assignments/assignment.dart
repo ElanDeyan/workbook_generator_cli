@@ -1,10 +1,46 @@
 import 'dart:collection';
 
 import 'package:dey_dev_utils/result.dart';
-import 'package:dey_dev_utils/scope.dart';
 import 'package:workbook_generator_core/domain/meeting_week/ministry.dart';
 import 'package:workbook_generator_core/domain/shared/name.dart';
 import 'package:workbook_generator_core/protocols/school_assignable.dart';
+
+typedef _StudyPointData = ({
+  String point,
+  SchoolPublicationReference? publicationReference,
+});
+
+Result<_StudyPointData?, FormatException> _parseStudyPoint(Object? value) {
+  if (value == null) {
+    return const .ok(null);
+  }
+  if (value is! Map<String, Object?> || value.length != 2) {
+    return .err(const .new('Invalid study_point object.'));
+  }
+
+  final point = value['point'];
+  final publicationCode = value['publication_code'];
+  if (point is! String || point.trim().isEmpty) {
+    return .err(
+      const FormatException('Study point must be a non-empty string.'),
+    );
+  }
+  if (publicationCode == null) {
+    return .ok((point: point, publicationReference: null));
+  }
+  if (publicationCode is! String) {
+    return .err(const .new('Invalid study point publication code.'));
+  }
+
+  final publicationReference = SchoolPublicationReference.fromPublicationCode(
+    publicationCode,
+  );
+  if (publicationReference.isErr) {
+    return .err(publicationReference.err!);
+  }
+
+  return .ok((point: point, publicationReference: publicationReference.ok));
+}
 
 sealed class const Assignment({
   required final String title,
@@ -36,6 +72,7 @@ final class const MinistryAssignment({
   required final bool isTalk,
   @override
   required final SchoolPublicationReference? schoolPublicationReference,
+  final String? studyPoint,
 }) extends Assignment implements SchoolAssignable {
   @override
   String toString() =>
@@ -55,7 +92,7 @@ final class const MinistryAssignment({
       'kind': final String kindString,
       'description': final String? description,
       'is_talk': final bool isTalk,
-      'publication_code': final String? publicationCode,
+      'study_point': final Object? studyPointValue,
     }) {
       final durationParts = durationString.split(':');
       if (durationParts.length != 2) {
@@ -80,13 +117,16 @@ final class const MinistryAssignment({
         );
       }
 
-      final publicationReference = publicationCode?.let(
-        SchoolPublicationReference.fromPublicationCode,
-      );
+      final studyPointResult = _parseStudyPoint(studyPointValue);
+      if (studyPointResult.isErr) {
+        return .err(studyPointResult.err!);
+      }
+      final studyPoint = studyPointResult.unwrapOrNull();
+      final publicationReference = studyPoint?.publicationReference;
 
       if (kind
           case Ok<MinistryAssignmentKind, FormatException>(value: final kind)
-          when kind != .whatWouldYouSay && publicationReference?.ok == null) {
+          when kind != .whatWouldYouSay && publicationReference == null) {
         return .err(
           FormatException(
             'Publication code is required for assignment kind: $kindString',
@@ -102,7 +142,8 @@ final class const MinistryAssignment({
           isTalk: isTalk,
           kind: kind.unwrap(),
           description: description,
-          schoolPublicationReference: publicationReference?.unwrapOrNull(),
+          studyPoint: studyPoint?.point,
+          schoolPublicationReference: publicationReference,
         ),
       );
     } else {
@@ -119,6 +160,7 @@ final class const BibleReadingAssignment({
   required final Name reader,
   @override
   required final SchoolPublicationReference? schoolPublicationReference,
+  final String? studyPoint,
 }) extends Assignment implements SchoolAssignable {
   @override
   String toString() {
@@ -134,7 +176,7 @@ final class const BibleReadingAssignment({
       'title': final String title,
       'duration': final String durationString,
       'reader': final String readerName,
-      'publication_code': final String? publicationCode,
+      'study_point': final Object? studyPointValue,
     }) {
       final durationParts = durationString.split(':');
       if (durationParts.length != 2) {
@@ -150,21 +192,19 @@ final class const BibleReadingAssignment({
       final duration = Duration(minutes: minutes, seconds: seconds);
       final reader = Name(readerName);
 
-      final publicationReference = publicationCode?.let(
-        SchoolPublicationReference.fromPublicationCode,
-      );
-      if (publicationReference == null || publicationReference.isErr) {
-        return .err(
-          .new('Invalid SchoolPublicationReference: $publicationCode'),
-        );
+      final studyPointResult = _parseStudyPoint(studyPointValue);
+      if (studyPointResult.isErr) {
+        return .err(studyPointResult.err!);
       }
+      final studyPoint = studyPointResult.unwrapOrNull();
 
       return .ok(
         .new(
           title: title,
           duration: duration,
           reader: reader,
-          schoolPublicationReference: publicationReference.ok,
+          studyPoint: studyPoint?.point,
+          schoolPublicationReference: studyPoint?.publicationReference,
         ),
       );
     }

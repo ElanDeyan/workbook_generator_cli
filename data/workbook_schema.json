@@ -1,6 +1,31 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "definitions": {
+    "studyPoint": {
+      "additionalProperties": false,
+      "properties": {
+        "point": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "publication_code": {
+          "enum": [
+            "th",
+            "lmd",
+            null
+          ],
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "required": [
+        "point",
+        "publication_code"
+      ],
+      "type": "object"
+    },
     "ministryAssignment": {
       "additionalProperties": false,
       "description": "A segment with title, duration, and multiple participants",
@@ -29,13 +54,16 @@
           ],
           "default": null
         },
-        "publication_code": {
-          "description": "Publication to be considered (for example, 'th' or 'lmd')",
-          "type": [
-            "string",
-            "null"
-          ],
-          "default": null
+        "study_point": {
+          "description": "Optional study point and the publication it refers to",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/studyPoint"
+            },
+            {
+              "type": "null"
+            }
+          ]
         },
         "kind": {
           "description": "Kind of ministry part",
@@ -61,8 +89,8 @@
         "duration",
         "title",
         "description",
-        "publication_code",
-        "who"
+        "who",
+        "study_point"
       ],
       "if": {
         "properties": {
@@ -105,19 +133,23 @@
           "minLength": 1,
           "type": "string"
         },
-        "publication_code": {
-          "description": "Publication to be considered (for example, 'th' or 'lmd')",
-          "type": [
-            "string",
-            "null"
-          ],
-          "default": "th"
+        "study_point": {
+          "description": "Optional study point and the publication it refers to",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/studyPoint"
+            },
+            {
+              "type": "null"
+            }
+          ]
         }
       },
       "required": [
         "duration",
         "title",
-        "reader"
+        "reader",
+        "study_point"
       ],
       "type": "object"
     },
